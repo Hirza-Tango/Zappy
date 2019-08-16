@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 13:45:13 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/08/16 15:11:57 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/08/16 15:16:32 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int sound_direction(t_player *player1, t_player *player2, t_gamestate gamestate)
 	else if (!diff_x)
 		return (normalise_direction(player1->direction,
 			diff_y > 0 ? M_PI_2 : -M_PI_2));
+	//change order
 	if (diff_x > gamestate.size_x / 2)
 		diff_x -= gamestate.size_x;
 	else if (-diff_x > gamestate.size_x / 2)
