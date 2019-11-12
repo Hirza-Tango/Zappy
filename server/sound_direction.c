@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 13:45:13 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/08/16 15:16:32 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/12 15:08:32 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	normalise_direction(unsigned int player_direction, double radians)
 ** y = mx + c;
 ** turn radians into direction from 1 - 9
 */
-int sound_direction(t_player *player1, t_player *player2, t_gamestate gamestate)
+int sound_direction(t_player *player1, t_player *player2, t_game_state game_state)
 {
 	long	diff_x;
 	long	diff_y;
@@ -50,13 +50,13 @@ int sound_direction(t_player *player1, t_player *player2, t_gamestate gamestate)
 		return (normalise_direction(player1->direction,
 			diff_y > 0 ? M_PI_2 : -M_PI_2));
 	//change order
-	if (diff_x > gamestate.size_x / 2)
-		diff_x -= gamestate.size_x;
-	else if (-diff_x > gamestate.size_x / 2)
-		diff_x += gamestate.size_x;
-	if (diff_y > gamestate.size_y / 2)
-		diff_y -= gamestate.size_y;
-	else if (-diff_y > gamestate.size_y / 2)
-		diff_y += gamestate.size_y;
+	if (diff_x > game_state.size_x / 2)
+		diff_x -= game_state.size_x;
+	else if (-diff_x > game_state.size_x / 2)
+		diff_x += game_state.size_x;
+	if (diff_y > game_state.size_y / 2)
+		diff_y -= game_state.size_y;
+	else if (-diff_y > game_state.size_y / 2)
+		diff_y += game_state.size_y;
 	return (normalise_direction(player1->direction, atan2(diff_y, diff_x)));
 }
