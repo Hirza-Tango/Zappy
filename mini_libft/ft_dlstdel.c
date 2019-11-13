@@ -1,19 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_dlstdel.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/08/28 11:07:52 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/09/04 13:48:06 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include <libft.h>
 
-void	exit_error(char *message, int code)
+void	ft_dlstdel(t_d_list **alst, void (*del)(void*, size_t))
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	t_d_list	*curr;
+	t_d_list	*next;
+
+	if (!alst)
+		return ;
+	curr = *alst;
+	while (curr)
+	{
+		next = curr->next;
+		ft_dlstdelone(&curr, del);
+		curr = next;
+	}
+	*alst = NULL;
 }

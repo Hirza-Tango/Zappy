@@ -1,19 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_lstdelone.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/05/23 10:23:04 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/05/23 11:42:37 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include "libft.h"
 
-void	exit_error(char *message, int code)
+void	ft_lstdelone(t_list **alst, void (*del)(void *, size_t))
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	del((*alst)->content, (*alst)->content_size);
+	free(*alst);
+	*alst = NULL;
 }

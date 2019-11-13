@@ -1,19 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/05/23 10:21:41 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/05/24 13:44:53 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include "libft.h"
 
-void	exit_error(char *message, int code)
+t_list	*ft_lstnew(void const *content, size_t content_size)
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	t_list	*ret;
+
+	ret = malloc(sizeof(t_list));
+	if (!ret)
+		return (NULL);
+	if (!content)
+	{
+		ret->content = NULL;
+		ret->content_size = 0;
+	}
+	else
+	{
+		ret->content = malloc(content_size);
+		ft_memcpy(ret->content, content, content_size);
+		ret->content_size = content_size;
+	}
+	ret->next = NULL;
+	return (ret);
 }

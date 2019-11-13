@@ -1,19 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_lstmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/05/23 10:25:57 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/05/24 13:44:27 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include "libft.h"
 
-void	exit_error(char *message, int code)
+t_list	*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem))
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	t_list	*ret;
+
+	if (!lst || !f)
+		return (NULL);
+	if (lst->next)
+	{
+		ret = ft_lstmap(lst->next, f);
+		ft_lstadd(&ret, f(lst));
+	}
+	else
+		ret = f(lst);
+	return (ret);
 }

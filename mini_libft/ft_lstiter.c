@@ -1,19 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_lstiter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/05/23 10:24:48 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/05/24 13:44:16 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include "libft.h"
 
-void	exit_error(char *message, int code)
+void	ft_lstiter(t_list *lst, void (*f)(t_list *elem))
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	t_list	*next;
+
+	while (lst)
+	{
+		next = lst->next;
+		f(lst);
+		lst = next;
+	}
 }

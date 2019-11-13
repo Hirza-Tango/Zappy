@@ -1,19 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_lstrev.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/07/24 14:25:48 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/07/31 13:05:03 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include "libft.h"
 
-void	exit_error(char *message, int code)
+static void	reverse(t_list *curr, t_list *prev, t_list **head)
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	t_list *next;
+
+	if (!curr->next)
+	{
+		*head = curr;
+		curr->next = prev;
+		return ;
+	}
+	next = curr->next;
+	curr->next = prev;
+	reverse(next, curr, head);
+}
+
+void		ft_lstrev(t_list **lst)
+{
+	if (!lst || !*lst)
+		return ;
+	reverse(*lst, NULL, lst);
 }

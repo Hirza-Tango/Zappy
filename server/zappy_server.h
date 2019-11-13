@@ -1,12 +1,12 @@
 #ifndef ZAPPY_SERVER_H
 # define ZAPPY_SERVER_H
 
+#include <sys/queue.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/queue.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netdb.h>
@@ -38,15 +38,13 @@ typedef struct	s_server_state
 	int				fd_listen;
 	unsigned char	current_players;
 	unsigned char	allowed_players;
-	fd_set			fd_read;
 	int				max_fd;
+	fd_set			fd_read;
 }				t_server_state;
-
-
 
 typedef struct	s_game_state
 {
-	char			**board;
+	t_list			**board;
 	unsigned int	size_x;
 	unsigned int	size_y;
 	char			**teams;

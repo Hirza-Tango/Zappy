@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_lstlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/08/13 15:35:10 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/08/16 15:30:28 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include "libft.h"
 
-void	exit_error(char *message, int code)
+size_t			ft_lstlen(t_list *list)
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	size_t	ret;
+
+	ret = 0;
+	while (list)
+	{
+		ret++;
+		list = list->next;
+	}
+	return (ret);
 }

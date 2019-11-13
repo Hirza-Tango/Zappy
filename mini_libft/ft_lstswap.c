@@ -1,19 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_lstswap.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/06/26 16:06:44 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/06/27 13:36:45 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include "libft.h"
 
-void	exit_error(char *message, int code)
+void	ft_lstswap(t_list *a, t_list *b)
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	void		*a_content;
+	size_t		a_size;
+
+	a_size = a->content_size;
+	a_content = a->content;
+	a->content = b->content;
+	a->content_size = b->content_size;
+	b->content = a_content;
+	b->content_size = a_size;
 }

@@ -1,19 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   util.c                                             :+:      :+:    :+:   */
+/*   ft_lstappend.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:11:30 by dslogrov         ###   ########.fr       */
+/*   Created: 2018/06/27 15:23:15 by dslogrov          #+#    #+#             */
+/*   Updated: 2018/07/02 13:10:09 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "zappy_server.h"
+#include "libft.h"
 
-void	exit_error(char *message, int code)
+void	ft_lstappend(t_list **alst, t_list *new)
 {
-	fprintf(stderr, "%d: %s\n", code, message);
-	exit(code);
+	t_list	*current;
+
+	if (!(current = *alst))
+	{
+		*alst = new;
+		return ;
+	}
+	while (current->next)
+		current = current->next;
+	current->next = new;
 }

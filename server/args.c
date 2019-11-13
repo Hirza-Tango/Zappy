@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:44:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/12 17:22:05 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/13 16:06:43 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	parse_teams(int argc, char **argv, t_game_state *game_state)
 		game_state->teams[j++] = strdup(argv[i++]);
 }
 
-static void	validate_args(t_game_state *game_state, t_server_state *server_state)
+static void	validate_args(t_game_state *game_state,
+	t_server_state *server_state)
 {
 	if (!server_state->port || !game_state->size_x || !game_state->size_y ||
 		!game_state->n_teams || !server_state->allowed_players)
