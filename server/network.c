@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:55:59 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/12 18:35:55 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/13 15:48:45 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static struct addrinfo	*get_info(t_server_state *s, struct addrinfo **ai)
 	hints.ai_family = PF_UNSPEC;
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
-	if ((err = getaddrinfo(NULL, s->port, &hints, ai)) != 0){
+	if ((err = getaddrinfo(NULL, s->port, &hints, ai)) != 0)
+	{
 		perror("WTF");
 		exit_error("Could not obtain address info", BAD_ADDR);
 	}
@@ -49,7 +50,7 @@ void					create_listener(t_server_state *s)
 		s->fd_listen = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
 		if (s->fd_listen >= 0)
 		{
-	//		setsockopt(s->fd_listen, SOL_SOCKET, SO_REUSEADDR, &o, sizeof(int));
+			setsockopt(s->fd_listen, SOL_SOCKET, SO_REUSEADDR, &o, sizeof(int));
 			if (bind(s->fd_listen, p->ai_addr, p->ai_addrlen) < 0)
 				close(s->fd_listen);
 			else
@@ -59,8 +60,9 @@ void					create_listener(t_server_state *s)
 	}
 	if (!p)
 		exit_error("Could not bind to socket", BIND_FAIL);
+	if (listen(s->fd_listen, 12) == -1)
+		exit_error("Could not listen on bound port", LISTEN_FAIL);
 	freeaddrinfo(ai);
-	s->max_fd = s->fd_listen;
 	FD_SET(s->fd_listen, &s->fd_read);
 }
 
@@ -80,13 +82,15 @@ static void				create_connection(t_server_state *s)
 	{
 		FD_SET(fd, &s->fd_read);
 		s->max_fd = MAX(s->max_fd, fd);
-		s->current_players++;
-		s->allowed_players--;
 		printf("New connection from %s on fd %d\n", inet_ntop(
 			remote_addr.ss_family, get_ip((struct sockaddr *)&remote_addr),
 			ip, INET6_ADDRSTRLEN), fd);
 	}
 }
+
+/*
+**	TODO: flesh this out properly
+*/
 
 void					handle_command(t_server_state *s, int fd)
 {
@@ -103,9 +107,9 @@ void					communicate(t_server_state *s)
 	struct timeval	timeout;
 	int				r;
 
-	timeout.tv_sec = 1;
+	bzero(&timeout, sizeof(timeout));
 	fds = s->fd_read;
-	if ((r = select(s->max_fd, &fds, NULL, NULL, &timeout)) == -1)
+	if ((r = select(s->max_fd + 1, &fds, NULL, NULL, &timeout)) == -1)
 		exit_error("Select failed", SELECT_FAIL);
 	i = 0;
 	while (i <= s->max_fd && r)

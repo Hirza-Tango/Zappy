@@ -21,7 +21,8 @@ enum	exit_codes
 	MISSING_OPTION,
 	BAD_ADDR,
 	BIND_FAIL,
-	SELECT_FAIL
+	SELECT_FAIL,
+	LISTEN_FAIL
 };
 
 typedef struct	s_player
