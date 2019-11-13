@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/23 10:21:41 by dslogrov          #+#    #+#             */
-/*   Updated: 2018/05/24 13:44:53 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/13 18:33:19 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 	else
 	{
 		ret->content = malloc(content_size);
-		ft_memcpy(ret->content, content, content_size);
+		memcpy(ret->content, content, content_size);
 		ret->content_size = content_size;
 	}
 	ret->next = NULL;

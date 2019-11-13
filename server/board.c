@@ -6,32 +6,36 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 15:54:31 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 17:07:18 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/13 18:39:53 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
-/*
-**	Each team is 6 players
-**	min resources per team:
-**		Linemate:	6 + 3 + 6 + 1.5 + 1.5 + 1 + 2	= 21
-**		Deraumere:	0 + 3 + 0 + 1.5 + 3 + 2 + 2		= 11.5
-**		Sibur:		0 + 3 + 3 + 3 + 2 + 2			= 13
-**		Mendiane:	4.5 + 2							= 6.5
-**		Phiras:		0 + 6 + 1.5 + 0 + 1 + 2			= 10.5
-**		Thystame:	1								= 1
-**		Resources will be availible at min per team * teams * 1.5
-*/
-
 void	gen_board(t_game_state *s)
 {
-	int i;
-	int j;
+	size_t	i;
+	size_t	j;
 
-	s->board = malloc(sizeof(LIST_HEAD *) * s->size_x);
-	//for resource type:
-		//for resource number:
-			//place at random (possibly overlapping position)
-
+	((t_resource *)g_resources)[0].team_requirement = s->size_x * s->size_y
+		/ LIFE_DURATION * TEAM_MAX_SIZE * FOOD_MULTIPLIER;
+	s->board = (t_list ***)malloc(sizeof(t_list **) * s->size_x);
+	i = 0;
+	while (i < s->size_x)
+	{
+		s->board[i] = (t_list **)malloc(sizeof(t_list *) * s->size_y);
+		bzero(s->board[i++], sizeof(t_list *) * s->size_y);
+	}
+	i = 0;
+	while (i < NUM_RESOURCES)
+	{
+		j = 0;
+		while (j < g_resources[i].team_requirement * RESOURCE_MULTIPLIER)
+		{
+			ft_lstadd(&s->board[RAND(s->size_x)][RAND(s->size_y)],
+				ft_lstnew(&i, sizeof(i)));
+			j++;
+		}
+		i++;
+	}
 }
