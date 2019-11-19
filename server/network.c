@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:55:59 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 15:48:45 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/19 18:04:15 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,7 @@ static struct addrinfo	*get_info(t_server_state *s, struct addrinfo **ai)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 	if ((err = getaddrinfo(NULL, s->port, &hints, ai)) != 0)
-	{
-		perror("WTF");
 		exit_error("Could not obtain address info", BAD_ADDR);
-	}
 	return (*ai);
 }
 
@@ -42,31 +39,30 @@ void					create_listener(t_server_state *s)
 	struct addrinfo *ai;
 	struct addrinfo *p;
 	int				o;
+	int				fd;
 
-	o = 1;
 	p = get_info(s, &ai);
 	while (p)
 	{
-		s->fd_listen = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
-		if (s->fd_listen >= 0)
+		fd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
+		if (fd >= 0)
 		{
-			setsockopt(s->fd_listen, SOL_SOCKET, SO_REUSEADDR, &o, sizeof(int));
-			if (bind(s->fd_listen, p->ai_addr, p->ai_addrlen) < 0)
-				close(s->fd_listen);
-			else
+			if (bind(fd, p->ai_addr, p->ai_addrlen) >= 0)
 				break ;
+			close(fd);
 		}
 		p = p->ai_next;
 	}
 	if (!p)
 		exit_error("Could not bind to socket", BIND_FAIL);
-	if (listen(s->fd_listen, 12) == -1)
+	if (listen(fd, 12) == -1)
 		exit_error("Could not listen on bound port", LISTEN_FAIL);
 	freeaddrinfo(ai);
-	FD_SET(s->fd_listen, &s->fd_read);
+	s->clients[fd].type = SERVER;
+	FD_SET(fd, &s->fd_read);
 }
 
-static void				create_connection(t_server_state *s)
+static void				create_connection(t_server_state *s, int server_fd)
 {
 	socklen_t				addr_len;
 	struct sockaddr_storage	remote_addr;
@@ -74,8 +70,7 @@ static void				create_connection(t_server_state *s)
 	char					ip[INET6_ADDRSTRLEN];
 
 	addr_len = sizeof(remote_addr);
-	//we need a datastructure to keep track of clients/guis
-	fd = accept(s->fd_listen, (struct sockaddr *)&remote_addr, &addr_len);
+	fd = accept(server_fd, (struct sockaddr *)&remote_addr, &addr_len);
 	if (fd == -1)
 		puts("Failed to accept incoming connection");
 	else
@@ -85,19 +80,11 @@ static void				create_connection(t_server_state *s)
 		printf("New connection from %s on fd %d\n", inet_ntop(
 			remote_addr.ss_family, get_ip((struct sockaddr *)&remote_addr),
 			ip, INET6_ADDRSTRLEN), fd);
+		s->clients[fd].buf_read = cbuff_create(256, 10);
+		s->clients[fd].handler = handle_unknown;
+		s->clients[fd].type = UNKNOWN;
+		send(fd, "BIENVENUE\n", 10, 0);
 	}
-}
-
-/*
-**	TODO: flesh this out properly
-*/
-
-void					handle_command(t_server_state *s, int fd)
-{
-	char	buff[256];
-
-	buff[recv(fd, buff, 255, 0)] = 0;
-	send(fd, buff, strlen(buff), 0);
 }
 
 void					communicate(t_server_state *s)
@@ -116,10 +103,11 @@ void					communicate(t_server_state *s)
 	{
 		if (FD_ISSET(i, &fds))
 		{
-			if (i == s->fd_listen)
-				create_connection(s);
+			s->clients[i].handler(s, i);
+			if (s->clients[i].type == SERVER)
+				create_connection(s, i);
 			else
-				handle_command(s, i);
+				client_read(s, i);
 			r--;
 		}
 		i++;

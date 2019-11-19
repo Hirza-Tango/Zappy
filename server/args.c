@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:44:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:06:43 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/19 18:47:49 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,8 @@ static void	validate_args(t_game_state *game_state,
 void		parse_args(int argc, char **argv,
 	t_game_state *game_state, t_server_state *server_state)
 {
-	int flag;
+	int				flag;
+	struct rlimit	rlp;
 
 	while ((flag = getopt(argc, argv, "p:x:y:n:c:t:")) != -1)
 	{
@@ -57,11 +58,13 @@ void		parse_args(int argc, char **argv,
 		else if (flag == 'n')
 			parse_teams(argc, argv, game_state);
 		else
-		{
-			dprintf(2, "Invalid flag %i", flag);
-			exit(INVALID_FLAG);
-		}
+			exit_error("Invalid flag", INVALID_FLAG);
 	}
-	server_state->current_players = 0;
+	getrlimit(RLIMIT_NOFILE, &rlp);
 	validate_args(game_state, server_state);
+	server_state->max_clients = rlp.rlim_cur;
+	server_state->clients = (t_client *)malloc(rlp.rlim_cur * sizeof(t_client));
+	server_state->current_players = 0;
+	server_state->n_teams = game_state->n_teams;
+	server_state->teams = game_state->n_teams;
 }

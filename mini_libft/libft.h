@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 12:02:56 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 17:23:23 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/19 11:55:38 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void			ft_lstrev(t_list **lst);
 size_t			ft_lstlen(t_list *list);
 void			ft_lstrm(t_list **list, size_t index,
 	void (*del)(void *, size_t));
+long			ft_lstadd_sorted(t_list **list, t_list *elem,
+	long (*f)(const void *, const void *));
 
 typedef struct	s_d_list
 {

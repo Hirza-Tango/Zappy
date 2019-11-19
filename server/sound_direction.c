@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/16 13:45:13 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/13 16:18:02 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/19 14:10:05 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	normalise_direction(unsigned int player_direction, double radians)
 	radians += (M_PI * 17 / 16);
 	if (radians > M_2_PI)
 		radians -= M_2_PI;
-	direction = ((int)((radians / M_2_PI) * 8 - 2) + (player_direction - 1))
+	direction = ((int)((radians / M_2_PI) * 8 - 2) + (player_direction * 2))
 		% 8 + 1;
 	return (direction);
 }
@@ -47,8 +47,10 @@ int	sound_direction(t_player *player1, t_player *player2,
 	if (!diff_x && !diff_y)
 		return (0);
 	else if (!diff_x)
+	{
 		return (normalise_direction(player1->direction,
 			diff_y > 0 ? M_PI_2 : -M_PI_2));
+	}
 	if (diff_x > game_state.size_x / 2)
 		diff_x -= game_state.size_x;
 	else if (-diff_x > game_state.size_x / 2)
