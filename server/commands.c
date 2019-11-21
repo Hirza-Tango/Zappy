@@ -6,16 +6,26 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/19 18:35:31 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/21 09:30:00 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
-void	handle_unknown(t_server_state *s, int fd)
+void	handle_monitor(t_state *s, int fd)
+{
+
+}
+
+void	handle_player(t_state *s, int fd)
+{
+
+}
+
+void	handle_unknown(t_state *s, int fd)
 {
 	static char	buff[256];
-	int i;
+	size_t i;
 
 	if (!cbuff_read(s->clients[fd].buf_read, buff))
 		return ;
@@ -29,14 +39,18 @@ void	handle_unknown(t_server_state *s, int fd)
 	i = 0;
 	while (i < s->n_teams)
 	{
-		if (!strncmp(s->teams[i], buff, strlen(s->teams[i])))
+		if (!strcmp(s->teams[i].name, buff))
 		{
-			//TODO: if not enough players, reject
-			//TODO: if egg is available, spawn at egg
-			s->clients[fd].handler = handle_player;
-			s->clients[fd].type = PLAYER;
-			s->clients[fd].player = new_player(fd, buff);
-			//TODO: send stuff
+			if (s->teams[i].nb_client < 1)
+				send(fd, "Team is full\n", 13, 0);
+			else
+			{
+				//TODO: if egg is available, spawn at egg
+				s->clients[fd].handler = handle_player;
+				s->clients[fd].type = PLAYER;
+				s->clients[fd].player = new_player(fd, buff);
+				send(fd, buff, snprintf(buff, 256, "%u\n%u %u\n", s->teams[i]		.nb_client, s->size_x, s->size_y), 0);
+			}
 			return ;
 		}
 		i++;
@@ -44,17 +58,7 @@ void	handle_unknown(t_server_state *s, int fd)
 	send(fd, "Unknown team\n", 13, 0);
 }
 
-void	handle_monitor(t_server_state *s, int fd)
-{
-
-}
-
-void	handle_player(t_server_state *s, int fd)
-{
-
-}
-
-void	client_read(t_server_state *s, int fd)
+void	client_read(t_state *s, int fd)
 {
 	char	buff[256];
 	int		r;

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 17:03:35 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/19 18:11:25 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/21 09:30:43 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int		cbuff_write(t_cbuff cbuff, char *data)
 		if (cbuff->head == cbuff->tail)
 			cbuff->is_full = 1;
 	}
+	return (0);
 }
 
 int		cbuff_read(t_cbuff cbuff, char *string_buff)

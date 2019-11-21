@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/19 18:31:15 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/21 09:27:50 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,12 @@ typedef struct			s_player
 	unsigned int	inventory[NUM_RESOURCES];
 }						t_player;
 
+typedef struct			s_team
+{
+	unsigned int	nb_client;
+	char			*name;
+}						t_team;
+
 typedef struct			s_client
 {
 	enum e_client_type	type;
@@ -115,7 +121,7 @@ typedef struct			s_resource
 }						t_resource;
 
 //TODO: fix team maximum players
-typedef struct			s_server_state
+typedef struct			s_state
 {
 	char			*port;
 	t_client		*clients;
@@ -124,28 +130,22 @@ typedef struct			s_server_state
 	unsigned char	allowed_players;
 	int				max_fd;
 	fd_set			fd_read;
-	char			**teams;
+	t_team			*teams;
 	size_t			n_teams;
-}						t_server_state;
-
-typedef struct			s_game_state
-{
 	t_list			*resources;
 	t_list			*players;
 	t_list			*eggs;
 	unsigned int	size_x;
 	unsigned int	size_y;
 	size_t			time;
-	char			**teams;
-	size_t			n_teams;
-}						t_game_state;
+}						t_state;
 
 void					exit_error(char *message, int code);
-void					parse_args(int argc, char **argv,
-	t_game_state *game_state, t_server_state *server_state);
-void					create_listener(t_server_state *s);
-void					communicate(t_server_state *s);
-void					gen_board(t_game_state *s);
-void					handle_unknown(t_server_state *s, int fd);
+void					parse_args(int argc, char **argv, t_state *state);
+void					create_listener(t_state *s);
+void					communicate(t_state *s);
+void					gen_board(t_state *s);
+void					handle_unknown(t_state *s, int fd);
+void					client_read(t_state *s, int fd);
 
 #endif

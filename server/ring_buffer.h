@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 17:04:08 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/19 17:25:54 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/21 09:31:02 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 struct	s_cbuff
 {
 	char	*buffer;
-	void	*head;
-	void	*tail;
+	char	*head;
+	char	*tail;
 	size_t	capacity;
 	size_t	entry_size;
 	char	is_full;

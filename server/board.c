@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 15:54:31 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/19 18:48:02 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/21 09:24:19 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ long	player_compare(const void *a, const void *b)
 **		using resource_compare() and player_compare() respectively
 */
 
-char	*look(t_game_state *s, unsigned x, unsigned y)
+char	*look(t_state *s, unsigned x, unsigned y)
 {
 	static char	buffer[STRBUFF_SIZE];
 	t_list		*current;
@@ -60,7 +60,7 @@ char	*look(t_game_state *s, unsigned x, unsigned y)
 	return (buffer);
 }
 
-void	gen_board(t_game_state *s)
+void	gen_board(t_state *s)
 {
 	size_t		i;
 	size_t		j;

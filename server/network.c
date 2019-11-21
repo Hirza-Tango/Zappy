@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:55:59 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/19 18:04:15 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/21 09:28:06 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void				*get_ip(struct sockaddr *a)
 		return (&((struct sockaddr_in6 *)a)->sin6_addr);
 }
 
-static struct addrinfo	*get_info(t_server_state *s, struct addrinfo **ai)
+static struct addrinfo	*get_info(t_state *s, struct addrinfo **ai)
 {
 	struct addrinfo	hints;
 	int				err;
@@ -34,11 +34,10 @@ static struct addrinfo	*get_info(t_server_state *s, struct addrinfo **ai)
 	return (*ai);
 }
 
-void					create_listener(t_server_state *s)
+void					create_listener(t_state *s)
 {
 	struct addrinfo *ai;
 	struct addrinfo *p;
-	int				o;
 	int				fd;
 
 	p = get_info(s, &ai);
@@ -62,7 +61,7 @@ void					create_listener(t_server_state *s)
 	FD_SET(fd, &s->fd_read);
 }
 
-static void				create_connection(t_server_state *s, int server_fd)
+static void				create_connection(t_state *s, int server_fd)
 {
 	socklen_t				addr_len;
 	struct sockaddr_storage	remote_addr;
@@ -87,7 +86,7 @@ static void				create_connection(t_server_state *s, int server_fd)
 	}
 }
 
-void					communicate(t_server_state *s)
+void					communicate(t_state *s)
 {
 	int				i;
 	fd_set			fds;
