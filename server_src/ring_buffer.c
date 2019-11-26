@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 17:03:35 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/21 09:30:43 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/26 13:37:22 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_cbuff	cbuff_create(size_t entry_size, size_t n_entries)
 {
 	t_cbuff	cbuff;
 
-	cbuff = malloc(sizeof(struct s_cbuff));
+	cbuff = (t_cbuff)malloc(sizeof(struct s_cbuff));
 	cbuff->buffer = (char *)malloc(entry_size * n_entries);
 	bzero(cbuff->buffer, entry_size * n_entries);
 	cbuff->head = cbuff->buffer;
@@ -64,7 +64,7 @@ int		cbuff_read(t_cbuff cbuff, char *string_buff)
 {
 	int size;
 
-	if (!memchr(cbuff->tail, '\n', cbuff->entry_size) ||
+	if (!cbuff || !memchr(cbuff->tail, '\n', cbuff->entry_size) ||
 		(cbuff->head == cbuff->tail && !cbuff->is_full))
 		return (0);
 	size = strlcpy(string_buff, cbuff->tail, cbuff->entry_size);

@@ -6,18 +6,18 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 10:34:17 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/26 13:55:15 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
-void	handle_monitor(t_state *s, int fd)
+void	handle_monitor(t_state *s, int fd, char *buff)
 {
 
 }
 
-void	handle_player(t_state *s, int fd)
+void	handle_player(t_state *s, int fd, char *buff)
 {
 
 }
@@ -29,35 +29,34 @@ t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
 	int			i;
 
 	bzero(&player, sizeof(player));
-	player.player_no = fd;
+	player.player_no = s->n_players++;
 	i = 0;
 	while (strcmp(s->teams[i].name, buff))
 		i++;
 	s->teams[i].nb_client--;
 	player.team_no = i;
-	elem = ft_lstnew(&player, sizeof(t_player));
-	ft_lstadd(&s->players, elem);
 	player.direction = RAND(4);
 	player.x = egg ? egg->x : RAND(s->size_x);
 	player.y = egg ? egg->y : RAND(s->size_y);
+	elem = ft_lstnew(&player, sizeof(t_player));
+	ft_lstadd(&s->players, elem);
 	return (elem->content);
 }
 
-void	handle_unknown(t_state *s, int fd)
+void	handle_unknown(t_state *s, int fd, char *buff)
 {
-	static char	buff[256];
 	size_t	i;
 	t_egg	*egg;
 
-	if (!cbuff_read(s->clients[fd].buf_read, buff))
-		return ;
+
 	if (!strcmp(buff, "GRAPHIC\n"))
 	{
 		s->clients[fd].type = MONITOR;
-		//TODO: send stuff
+		init_monitor(s, fd);
 		return ;
 	}
 	i = 0;
+	buff[strlen(buff) - 1] = 0;
 	while (i < s->n_teams)
 	{
 		if (!strcmp(s->teams[i].name, buff))
@@ -72,6 +71,7 @@ void	handle_unknown(t_state *s, int fd)
 				s->clients[fd].player = new_player(s, fd, buff, egg);
 				send(fd, buff, snprintf(buff, 256, "%u\n%u %u\n",
 					s->teams[i].nb_client, s->size_x, s->size_y), 0);
+				monitor_pnw(s, -1, s->clients[fd].player);
 			}
 			return ;
 		}
@@ -80,15 +80,43 @@ void	handle_unknown(t_state *s, int fd)
 	send(fd, "Unknown team\n", 13, 0);
 }
 
+void	handle(t_state *s)
+{
+	static char	buff[256];
+	int i;
+
+	i = -1;
+	while (++i <= s->max_fd)
+	{
+		if (!FD_ISSET(i, &s->fd_read))
+			continue ;
+		if (!cbuff_read(s->clients[i].buf_read, buff))
+			continue ;
+		if (s->clients[i].type == UNKNOWN)
+			handle_unknown(s, i, buff);
+		else if (s->clients[i].type == PLAYER)
+			handle_player(s, i, buff);
+		else if (s->clients[i].type == MONITOR)
+			handle_monitor(s, i, buff);
+	}
+}
+
 void	client_read(t_state *s, int fd)
 {
 	char	buff[256];
 	int		r;
 
-	recv(fd, buff, 255, 0);
+	r = recv(fd, buff, 255, 0);
 	if (r <= 0)
 	{
 		close(fd);
+		if (s->clients[fd].player)
+		{
+			s->teams[s->clients[fd].player->team_no].nb_client++;
+			//TODO: pop removed players from player list
+			s->n_players--;
+		}
+		//TODO: possibly drop stuff?
 		FD_CLR(fd, &(s->fd_read));
 		cbuff_destroy(s->clients[fd].buf_read);
 		bzero(&s->clients[fd], sizeof(t_client));

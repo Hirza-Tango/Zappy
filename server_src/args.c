@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:44:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 10:36:47 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/26 13:44:11 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 static void	parse_teams(int argc, char **argv, t_state *state)
 {
-	size_t	i;
+	int	i;
 	size_t	j;
 
 	i = optind - 1;
+	state->n_teams = 0;
 	while (optind < argc && argv[optind][0] != '-')
 		state->n_teams++ && optind++;
 	state->teams = (t_team *)malloc(state->n_teams * sizeof(t_team));
@@ -46,9 +47,9 @@ static void	init_states(t_state *state)
 	state->clients = (t_client *)malloc(rlp.rlim_cur * sizeof(t_client));
 	i = 0;
 	while (i < state->n_teams)
-		state->teams[i++].nb_client = state->max_clients;
-	state->n_teams = state->n_teams;
-	state->teams = state->teams;
+		state->teams[i++].nb_client = state->allowed_players;
+	state->players = NULL;
+	state->eggs = NULL;
 }
 
 void		parse_args(int argc, char **argv, t_state *state)

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 10:31:36 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/26 15:42:25 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,12 @@
 # include "ring_buffer.h"
 
 # define MAX(x,y) x > y ? x : y
-# define RAND(x) (rand() % (x + 1))
+# define RAND(x) (rand() % x)
 # define STRBUFF_SIZE 4096
 
 enum					e_client_type
 {
+	NOT_CLIENT,
 	UNKNOWN,
 	SERVER,
 	MONITOR,
@@ -91,12 +92,13 @@ typedef struct			s_player
 {
 	unsigned int	x;
 	unsigned int	y;
-	unsigned char	direction;
 	size_t			player_no;
 	size_t			team_no;
 	void			(*next_action)();
 	time_t			resolution_time;
+	unsigned int	level;
 	unsigned int	inventory[NUM_RESOURCES];
+	unsigned char	direction;
 }						t_player;
 
 typedef struct			s_team
@@ -112,24 +114,19 @@ typedef struct			s_client
 	t_cbuff				buf_read;
 }						t_client;
 
-typedef struct			s_resource
-{
-	unsigned int	x;
-	unsigned int	y;
-	unsigned int	resource_no;
-}						t_resource;
-
 typedef struct			s_egg
 {
 	unsigned int	x;
 	unsigned int	y;
+	unsigned int	player_no;
+	unsigned int	egg_no;
 	unsigned int	team_no;
 	time_t			spawn_time;
 }						t_egg;
 
-//TODO: fix team maximum players
 typedef struct			s_state
 {
+	unsigned int	***board;
 	char			*port;
 	t_client		*clients;
 	int				max_clients;
@@ -138,9 +135,10 @@ typedef struct			s_state
 	fd_set			fd_read;
 	t_team			*teams;
 	size_t			n_teams;
-	t_list			*resources;
 	t_list			*players;
+	size_t			n_players;
 	t_list			*eggs;
+	size_t			n_eggs;
 	unsigned int	size_x;
 	unsigned int	size_y;
 	size_t			time;
@@ -151,7 +149,34 @@ void					parse_args(int argc, char **argv, t_state *state);
 void					create_listener(t_state *s);
 void					communicate(t_state *s);
 void					gen_board(t_state *s);
-void					handle_unknown(t_state *s, int fd);
 void					client_read(t_state *s, int fd);
+void					handle(t_state *s);
+
+void					init_monitor(t_state *s, int fd);
+void					send_all_monitors(t_state *s, char *buffer);
+void					monitor_seg(t_state *s, char *team);
+void					monitor_msz(t_state *s, int fd);
+void					monitor_bct(t_state *s, int fd,
+	unsigned int x, unsigned int y);
+void					monitor_mct(t_state *s, int fd);
+void					monitor_tna(t_state *s, int fd);
+void					monitor_sgt(t_state *s, int fd);
+void					monitor_pnw(t_state *s, int fd, t_player *player);
+void					monitor_enw(t_state *s, int fd, t_egg *egg);
+void					monitor_ppo(t_state *s, int fd, unsigned int player_no);
+void					monitor_plv(t_state *s, int fd, unsigned int player_no);
+void					monitor_pin(t_state *s, int fd, unsigned int player_no);
+void					monitor_pex(t_state *s, t_player *p);
+void					monitor_pbc(t_state *s, t_player *p, char *message);
+void					monitor_pic(t_state *s, t_player *player1);
+void					monitor_pie(t_state *s,
+	unsigned int x, unsigned int y, int r);
+void					monitor_pfk(t_state *s, t_player *p);
+void					monitor_pdr(t_state *s, t_player *p, int i);
+void					monitor_pgt(t_state *s, t_player *p, int i);
+void					monitor_pdi(t_state *s, t_player *p);
+void					monitor_eht(t_state *s, t_egg *e);
+void					monitor_edi(t_state *s, t_egg *e);
+
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:55:59 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 10:35:27 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/26 13:37:47 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void					create_listener(t_state *s)
 	int				fd;
 
 	p = get_info(s, &ai);
+	fd = 0;
 	while (p)
 	{
 		fd = socket(p->ai_family, p->ai_socktype, p->ai_protocol);
@@ -58,6 +59,7 @@ void					create_listener(t_state *s)
 		exit_error("Could not listen on bound port", LISTEN_FAIL);
 	freeaddrinfo(ai);
 	s->clients[fd].type = SERVER;
+	s->max_fd = fd;
 	FD_SET(fd, &s->fd_read);
 }
 
