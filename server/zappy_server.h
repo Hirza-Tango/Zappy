@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/21 09:27:50 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/26 10:31:36 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ typedef struct			s_client
 {
 	enum e_client_type	type;
 	t_player			*player;
-	void				(*handler)();
 	t_cbuff				buf_read;
 }						t_client;
 
@@ -120,13 +119,20 @@ typedef struct			s_resource
 	unsigned int	resource_no;
 }						t_resource;
 
+typedef struct			s_egg
+{
+	unsigned int	x;
+	unsigned int	y;
+	unsigned int	team_no;
+	time_t			spawn_time;
+}						t_egg;
+
 //TODO: fix team maximum players
 typedef struct			s_state
 {
 	char			*port;
 	t_client		*clients;
 	int				max_clients;
-	unsigned char	current_players;
 	unsigned char	allowed_players;
 	int				max_fd;
 	fd_set			fd_read;

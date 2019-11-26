@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:55:59 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/21 09:28:06 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/26 10:35:27 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ static void				create_connection(t_state *s, int server_fd)
 			remote_addr.ss_family, get_ip((struct sockaddr *)&remote_addr),
 			ip, INET6_ADDRSTRLEN), fd);
 		s->clients[fd].buf_read = cbuff_create(256, 10);
-		s->clients[fd].handler = handle_unknown;
 		s->clients[fd].type = UNKNOWN;
 		send(fd, "BIENVENUE\n", 10, 0);
 	}
@@ -102,7 +101,6 @@ void					communicate(t_state *s)
 	{
 		if (FD_ISSET(i, &fds))
 		{
-			s->clients[i].handler(s, i);
 			if (s->clients[i].type == SERVER)
 				create_connection(s, i);
 			else

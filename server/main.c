@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 16:06:51 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/21 09:25:18 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/11/26 10:35:35 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int		main(int argc, char **argv)
 	while (1)
 	{
 		communicate(&state);
+		//handle_clients();
 		//handle message instructions
 		//handle game events
 	}
