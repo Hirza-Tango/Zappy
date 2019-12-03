@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:28:02 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 16:40:54 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 17:04:24 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,14 @@ void		player_broadcast(t_state *s, int fd, void *message)
 		}
 	send(fd, "ok\n", 3, 0);
 	monitor_pbc(s, player, message);
+	free(message);
 }
 
-void		player_connect_nbr(t_state *s, int fd, void *unused)
+void		player_connect_nbr(t_state *s, int fd)
 {
 	char	buff[STRBUFF_SIZE];
 
-	(void)unused;
 	snprintf(buff, STRBUFF_SIZE, "%u\n",
-		s->teams[s->clients[fd].player->team_no]);
+		s->teams[s->clients[fd].player->team_no].nb_client);
 	send(fd, buff, strlen(buff), 0);
 }

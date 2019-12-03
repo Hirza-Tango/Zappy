@@ -6,14 +6,15 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:27:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 16:39:49 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 17:02:31 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
-void		player_incantation_start(t_state *s, int fd, void *unused)
+void		player_incantation_start(t_state *s, int fd)
 {
+	set_action(s->clients[fd].player, player_incantation_end, 300 / s->time, 0);
 	//TODO:this
 	monitor_pic(s, s->clients[fd].player);
 }

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 10:52:30 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 16:29:48 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 17:03:12 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,14 @@ t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
 	player->x = egg ? egg->x : RAND(s->size_x);
 	player->y = egg ? egg->y : RAND(s->size_y);
 	return (player);
+}
+
+void	set_action(t_player *player, void (f)(t_state *, int, void *),
+	time_t t, void *option)
+{
+	player->next_action = f;
+	player->resolution_time = time(NULL) + t;
+	player->option = option;
 }
 
 /*

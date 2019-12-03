@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 15:54:31 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 12:45:22 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 17:05:31 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	gen_board(t_state *s)
 	}
 	((t_resource_entry *)g_resources_info)[0].team_requirement =
 		(s->size_x * s->size_y) / LIFE_DURATION * TEAM_MAX_SIZE * FOOD_MULTIPLIER;
-	//TODO: fix lack of food
+	//FIXME: fix lack of food
 	i = -1;
 	while (++i < NUM_RESOURCES)
 	{

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 16:34:35 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 17:02:59 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,33 @@ void	handle_monitor(t_state *s, int fd, char *buff)
 	send(fd, "suc\n", 4, 0);
 }
 
-void	set_action(t_state *s, int fd, void (f)(t_state *, int, void *),
-	time_t t)
-{
-	s->clients[fd].player->next_action = f;
-	s->clients[fd].player->resolution_time = time(NULL) + t;
-}
-
 void	handle_player(t_state *s, int fd, char *buff)
 {
+	t_player *player = s->clients[fd].player;
 	if (!strcmp(buff, "advance\n"))
-		set_action(s, fd, player_advance, 7 / s->time);
+		set_action(player, player_advance, 7 / s->time, NULL);
 	else if (!strcmp(buff, "left\n"))
-		set_action(s, fd, player_left, 7 / s->time);
+		set_action(player, player_left, 7 / s->time, NULL);
 	else if (!strcmp(buff, "right\n"))
-		set_action(s, fd, player_right, 7 / s->time);
+		set_action(player, player_right, 7 / s->time, NULL);
 	else if (!strcmp(buff, "see\n"))
-		set_action(s, fd, player_see, 7 / s->time);
+		set_action(player, player_see, 7 / s->time, NULL);
+	else if (!strcmp(buff, "inventory\n"))
+		set_action(player, player_inventory, 1 / s->time, NULL);
+	else if (!strncmp(buff, "take", 4))
+		set_action(player, player_take, 7 / s->time, strdup(buff + 4));
+	else if (!strncmp(buff, "put", 3))
+		set_action(player, player_put, 7 / s->time, strdup(buff + 3));
+	else if (!strcmp(buff, "kick\n"))
+		set_action(player, player_kick, 7 / s->time, NULL);
+	else if (!strncmp(buff, "broadcast", 9))
+		set_action(player, player_broadcast, 7 / s->time, strdup(buff + 10));
+	else if (!strcmp(buff, "incantation"))
+		player_incantation_start(s, fd);
+	else if (!strcmp(buff, "fork\n"))
+		set_action(player, player_kick, 42 / s->time, NULL);
+	else if (!strcmp(buff, "connect_nbr\n"))
+		player_connect_nbr(s, fd);
 }
 
 void	handle_unknown(t_state *s, int fd, char *buff)

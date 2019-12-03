@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:25:47 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 16:38:10 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 16:53:02 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void		player_take(t_state *s, int fd, void *num)
 	monitor_pgt(s, player, atoi(num));
 	monitor_pin(s, -1, player->player_no);
 	monitor_bct(s, -1, player->x, player->y);
+	free(num);
 }
 
 void		player_put(t_state *s, int fd, void *num)
@@ -110,4 +111,5 @@ void		player_put(t_state *s, int fd, void *num)
 	monitor_pdr(s, player, atoi(num));
 	monitor_pin(s, -1, player->player_no);
 	monitor_bct(s, -1, player->x, player->y);
+	free(num);
 }
