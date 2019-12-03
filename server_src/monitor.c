@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 11:33:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:19:58 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 10:50:59 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,17 @@ void	send_all_monitors(t_state *s, char *buffer)
 
 void	monitor_seg(t_state *s, char *team)
 {
-	char	buff[256];
+	char	buff[STRBUFF_SIZE];
 
-	snprintf(buff, 256, "seg %s\n", team);
+	snprintf(buff, STRBUFF_SIZE, "seg %s\n", team);
 	send_all_monitors(s, buff);
 }
 
 void	monitor_smg(t_state *s, char *message)
 {
-	char	buff[256];
+	char	buff[STRBUFF_SIZE];
 
-	snprintf(buff, 256, "smg %s\n", message);
+	snprintf(buff, STRBUFF_SIZE, "smg %s\n", message);
 	send_all_monitors(s, buff);
 }
 

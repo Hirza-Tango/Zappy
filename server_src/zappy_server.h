@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:26:38 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 10:50:35 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 
 # define MAX(x,y) x > y ? x : y
 # define RAND(x) (rand() % x)
-# define STRBUFF_SIZE 4096
+# define STRBUFF_SIZE 256
 
 enum					e_client_type
 {

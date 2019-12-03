@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:13:09 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 10:50:31 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void	handle_unknown(t_state *s, int fd, char *buff)
 	size_t	i;
 	t_egg	*egg;
 
-
 	if (!strcmp(buff, "GRAPHIC\n"))
 	{
 		s->clients[fd].type = MONITOR;
@@ -64,11 +63,10 @@ void	handle_unknown(t_state *s, int fd, char *buff)
 				send(fd, "Team is full\n", 13, 0);
 			else
 			{
-
 				egg = NULL;//TODO: if egg is available, spawn at egg
 				s->clients[fd].type = PLAYER;
 				s->clients[fd].player = new_player(s, fd, buff, egg);
-				send(fd, buff, snprintf(buff, 256, "%u\n%u %u\n",
+				send(fd, buff, snprintf(buff, STRBUFF_SIZE, "%u\n%u %u\n",
 					s->teams[i].nb_client, s->size_x, s->size_y), 0);
 				monitor_pnw(s, -1, s->clients[fd].player);
 			}
@@ -81,7 +79,7 @@ void	handle_unknown(t_state *s, int fd, char *buff)
 
 void	handle(t_state *s)
 {
-	static char	buff[256];
+	static char	buff[STRBUFF_SIZE];
 	int i;
 
 	i = -1;
@@ -102,7 +100,7 @@ void	handle(t_state *s)
 
 void	client_read(t_state *s, int fd)
 {
-	char	buff[256];
+	char	buff[STRBUFF_SIZE];
 	int		r;
 
 	r = recv(fd, buff, 255, 0);
@@ -112,11 +110,9 @@ void	client_read(t_state *s, int fd)
 		if (s->clients[fd].type == PLAYER)
 		{
 			s->teams[s->clients[fd].player->team_no].nb_client++;
-			//TODO: pop removed players from player list
 			s->n_players--;
 		}
 		//TODO: possibly drop stuff?
-		//TODO: pop removed monitor
 		FD_CLR(fd, &(s->fd_read));
 		cbuff_destroy(s->clients[fd].buf_read);
 		bzero(&s->clients[fd], sizeof(t_client));

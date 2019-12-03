@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:55:59 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 13:37:47 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 10:50:31 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static void				create_connection(t_state *s, int server_fd)
 		printf("New connection from %s on fd %d\n", inet_ntop(
 			remote_addr.ss_family, get_ip((struct sockaddr *)&remote_addr),
 			ip, INET6_ADDRSTRLEN), fd);
-		s->clients[fd].buf_read = cbuff_create(256, 10);
+		s->clients[fd].buf_read = cbuff_create(STRBUFF_SIZE, 10);
 		s->clients[fd].type = UNKNOWN;
 		send(fd, "BIENVENUE\n", 10, 0);
 	}
