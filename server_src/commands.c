@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 13:55:15 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 10:13:09 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
 	player.x = egg ? egg->x : RAND(s->size_x);
 	player.y = egg ? egg->y : RAND(s->size_y);
 	elem = ft_lstnew(&player, sizeof(t_player));
-	ft_lstadd(&s->players, elem);
 	return (elem->content);
 }
 
@@ -110,13 +109,14 @@ void	client_read(t_state *s, int fd)
 	if (r <= 0)
 	{
 		close(fd);
-		if (s->clients[fd].player)
+		if (s->clients[fd].type == PLAYER)
 		{
 			s->teams[s->clients[fd].player->team_no].nb_client++;
 			//TODO: pop removed players from player list
 			s->n_players--;
 		}
 		//TODO: possibly drop stuff?
+		//TODO: pop removed monitor
 		FD_CLR(fd, &(s->fd_read));
 		cbuff_destroy(s->clients[fd].buf_read);
 		bzero(&s->clients[fd], sizeof(t_client));

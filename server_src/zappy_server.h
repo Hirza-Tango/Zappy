@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 15:42:25 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 10:26:38 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ typedef struct			s_egg
 {
 	unsigned int	x;
 	unsigned int	y;
-	unsigned int	player_no;
+	size_t			player_no;
 	unsigned int	egg_no;
 	unsigned int	team_no;
 	time_t			spawn_time;
@@ -135,7 +135,6 @@ typedef struct			s_state
 	fd_set			fd_read;
 	t_team			*teams;
 	size_t			n_teams;
-	t_list			*players;
 	size_t			n_players;
 	t_list			*eggs;
 	size_t			n_eggs;

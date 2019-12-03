@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:44:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 13:44:11 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 10:13:59 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ static void	init_states(t_state *state)
 	i = 0;
 	while (i < state->n_teams)
 		state->teams[i++].nb_client = state->allowed_players;
-	state->players = NULL;
 	state->eggs = NULL;
 }
 

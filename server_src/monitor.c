@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 11:33:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 15:43:25 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 10:19:58 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,17 @@ void	monitor_smg(t_state *s, char *message)
 
 void	init_monitor(t_state *s, int fd)
 {
-	t_list *list;
+	t_list	*list;
+	size_t	i;
 
 	monitor_msz(s, fd);
 	monitor_sgt(s, fd);
 	monitor_mct(s, fd);
 	monitor_tna(s, fd);
-	list = s->players;
-	while (list)
-	{
-		monitor_pnw(s, fd, list->content);
-		list = list->next;
-	}
+	i = -1;
+	while (++i < s->max_clients)
+		if (s->clients[i].type == PLAYER)
+			monitor_pnw(s, fd, s->clients[i].player);
 	list = s->eggs;
 	while (list)
 	{
