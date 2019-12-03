@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 14:37:51 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 16:23:48 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <netdb.h>
 # include <arpa/inet.h>
 # include <sys/select.h>
+# include <time.h>
 # include "../mini_libft/libft.h"
 # include "ring_buffer.h"
 
@@ -152,11 +153,20 @@ void					client_read(t_state *s, int fd);
 void					handle(t_state *s);
 void					execute(t_state *s);
 
-
 t_player				*new_player(t_state *s, int fd, char *buff, t_egg *egg);
-
-int						sound_direction(t_player *player1, t_player *player2,
-	t_state *state);
+void					player_advance(t_state *s, int fd, void *unused);
+void					player_left(t_state *s, int fd, void *unused);
+void					player_right(t_state *s, int fd, void *unused);
+void					player_see(t_state *s, int fd, void *unused);
+void					player_inventory(t_state *s, int fd, void *unused);
+void					player_take(t_state *s, int fd, void *num);
+void					player_put(t_state *s, int fd, void *num);
+void					player_incantation_start(t_state *s, int fd, void *unused);
+void					player_incantation_end(t_state *s, int fd, void *unused);
+void					player_kick(t_state *s, int fd, void *unused);
+void					player_fork(t_state *s, int fd, void *unused);
+void					player_broadcast(t_state *s, int fd, void *message);
+void					player_connect_nbr(t_state *s, int fd, void *unused);
 
 void					init_monitor(t_state *s, int fd);
 void					send_all_monitors(t_state *s, char *buffer);
@@ -184,6 +194,5 @@ void					monitor_pgt(t_state *s, t_player *p, int i);
 void					monitor_pdi(t_state *s, t_player *p);
 void					monitor_eht(t_state *s, t_egg *e);
 void					monitor_edi(t_state *s, t_egg *e);
-
 
 #endif

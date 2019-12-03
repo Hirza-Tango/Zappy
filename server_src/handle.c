@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 12:46:38 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 16:34:35 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,23 @@ void	handle_monitor(t_state *s, int fd, char *buff)
 	send(fd, "suc\n", 4, 0);
 }
 
+void	set_action(t_state *s, int fd, void (f)(t_state *, int, void *),
+	time_t t)
+{
+	s->clients[fd].player->next_action = f;
+	s->clients[fd].player->resolution_time = time(NULL) + t;
+}
+
 void	handle_player(t_state *s, int fd, char *buff)
 {
-
+	if (!strcmp(buff, "advance\n"))
+		set_action(s, fd, player_advance, 7 / s->time);
+	else if (!strcmp(buff, "left\n"))
+		set_action(s, fd, player_left, 7 / s->time);
+	else if (!strcmp(buff, "right\n"))
+		set_action(s, fd, player_right, 7 / s->time);
+	else if (!strcmp(buff, "see\n"))
+		set_action(s, fd, player_see, 7 / s->time);
 }
 
 void	handle_unknown(t_state *s, int fd, char *buff)

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:31:25 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:50:31 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 16:36:52 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ void	monitor_bct(t_state *s, int fd, unsigned int x, unsigned int y)
 		y, s->board[x][y][0], s->board[x][y][1], s->board[x][y][2],
 		s->board[x][y][3], s->board[x][y][4], s->board[x][y][5],
 		s->board[x][y][6]);
-	send(fd, buff, strlen(buff), 0);
+	if (fd < 0)
+		send_all_monitors(s, buff);
+	else
+		send(fd, buff, strlen(buff), 0);
 }
 
 void	monitor_mct(t_state *s, int fd)
@@ -64,5 +67,8 @@ void	monitor_sgt(t_state *s, int fd)
 	char	buff[STRBUFF_SIZE];
 
 	snprintf(buff, STRBUFF_SIZE, "sgt %zu\n", s->time);
-	send(fd, buff, strlen(buff), 0);
+	if (fd < 0)
+		send_all_monitors(s, buff);
+	else
+		send(fd, buff, strlen(buff), 0);
 }

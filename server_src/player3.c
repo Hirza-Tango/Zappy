@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sound_direction.c                                  :+:      :+:    :+:   */
+/*   player3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/08/16 13:45:13 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 14:38:14 by dslogrov         ###   ########.fr       */
+/*   Created: 2019/12/03 15:28:02 by dslogrov          #+#    #+#             */
+/*   Updated: 2019/12/03 16:40:54 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
 #include "zappy_server.h"
+#include <math.h>
 
 /*
 **	Turns player direction from radians to 1-9 as defined in the PDF.
@@ -19,7 +19,7 @@
 **	Internally, direction 1 is east, to correspond with 0 rads
 */
 
-int	normalise_direction(unsigned int player_direction, double radians)
+static int	normalise_direction(unsigned int player_direction, double radians)
 {
 	int direction;
 
@@ -36,7 +36,7 @@ int	normalise_direction(unsigned int player_direction, double radians)
 ** turn radians into direction from 1 - 9
 */
 
-int	sound_direction(t_player *player1, t_player *player2,
+static int	sound_direction(t_player *player1, t_player *player2,
 	t_state *state)
 {
 	long	diff_x;
@@ -60,4 +60,41 @@ int	sound_direction(t_player *player1, t_player *player2,
 	else if (-diff_y > state->size_y / 2)
 		diff_y += state->size_y;
 	return (normalise_direction(player1->direction, atan2(diff_y, diff_x)));
+}
+
+void		player_fork(t_state *s, int fd, void *unused)
+{
+	//TODO:this
+}
+
+void		player_broadcast(t_state *s, int fd, void *message)
+{
+	t_player	*player;
+	int			i;
+	char		direction;
+
+	player = s->clients[fd].player;
+	i = -1;
+	while (++i)
+		if (s->clients[i].type == PLAYER)
+		{
+			send(i, "message ", 8, 0);
+			direction = sound_direction(player, s->clients[i].player, s) + '0';
+			send(i, &direction, 1, 0);
+			send(i, ",", 1, 0);
+			send(i, message, strlen(message), 0);
+			send(i, "\n", 1, 0);
+		}
+	send(fd, "ok\n", 3, 0);
+	monitor_pbc(s, player, message);
+}
+
+void		player_connect_nbr(t_state *s, int fd, void *unused)
+{
+	char	buff[STRBUFF_SIZE];
+
+	(void)unused;
+	snprintf(buff, STRBUFF_SIZE, "%u\n",
+		s->teams[s->clients[fd].player->team_no]);
+	send(fd, buff, strlen(buff), 0);
 }

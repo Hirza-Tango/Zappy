@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 11:33:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 14:06:01 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 16:37:33 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,10 @@ void	monitor_smg(t_state *s, char *message)
 
 void	monitor_sst(t_state *s, int fd, int time)
 {
-	size_t	i;
-
 	if (time > 0)
 	{
 		s->time = time;
-		i = 0;
-		while (++i <= s->max_fd)
-			if (s->clients[i].type == MONITOR)
-				monitor_sgt(s, i);
+		monitor_sgt(s, -1);
 	}
 	else
 		send(fd, "sbp\n", 4, 0);
