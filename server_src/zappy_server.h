@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 11:46:20 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 14:37:51 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,12 @@ void					gen_board(t_state *s);
 void					client_read(t_state *s, int fd);
 void					handle(t_state *s);
 void					execute(t_state *s);
+
+
 t_player				*new_player(t_state *s, int fd, char *buff, t_egg *egg);
+
+int						sound_direction(t_player *player1, t_player *player2,
+	t_state *state);
 
 void					init_monitor(t_state *s, int fd);
 void					send_all_monitors(t_state *s, char *buffer);
