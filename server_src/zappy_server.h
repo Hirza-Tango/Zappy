@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:50:35 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 11:46:20 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ typedef struct			s_player
 
 typedef struct			s_team
 {
-	unsigned int	nb_client;
 	char			*name;
+	unsigned int	nb_client;
 }						t_team;
 
 typedef struct			s_client
@@ -129,7 +129,7 @@ typedef struct			s_state
 	unsigned int	***board;
 	char			*port;
 	t_client		*clients;
-	int				max_clients;
+	size_t			max_clients;
 	unsigned char	allowed_players;
 	int				max_fd;
 	fd_set			fd_read;
@@ -150,6 +150,8 @@ void					communicate(t_state *s);
 void					gen_board(t_state *s);
 void					client_read(t_state *s, int fd);
 void					handle(t_state *s);
+void					execute(t_state *s);
+t_player				*new_player(t_state *s, int fd, char *buff, t_egg *egg);
 
 void					init_monitor(t_state *s, int fd);
 void					send_all_monitors(t_state *s, char *buffer);
@@ -160,6 +162,7 @@ void					monitor_bct(t_state *s, int fd,
 void					monitor_mct(t_state *s, int fd);
 void					monitor_tna(t_state *s, int fd);
 void					monitor_sgt(t_state *s, int fd);
+void					monitor_sst(t_state *s, int fd, int time);
 void					monitor_pnw(t_state *s, int fd, t_player *player);
 void					monitor_enw(t_state *s, int fd, t_egg *egg);
 void					monitor_ppo(t_state *s, int fd, unsigned int player_no);

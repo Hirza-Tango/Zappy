@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands.c                                         :+:      :+:    :+:   */
+/*   handle.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:50:31 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 11:47:05 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,35 @@
 
 void	handle_monitor(t_state *s, int fd, char *buff)
 {
-
+	if (!strcmp(buff, "msz\n"))
+		monitor_msz(s, fd);
+	else if (!strncmp(buff, "bct", 3))
+	{
+		//TODO: test strtok implementation
+		monitor_bct(s, fd, atoi(strtok_r(buff + 3, " ", &buff)),
+			atoi(strtok_r(buff + 3, " ", &buff)));
+		strtok_r(NULL, "", &buff);
+	}
+	else if (!strcmp(buff, "mct\n"))
+		monitor_mct(s, fd);
+	else if (!strcmp(buff, "tna\n"))
+		monitor_tna(s, fd);
+	else if (!strncmp(buff, "ppo", 3))
+		monitor_ppo(s, fd, atoi(strchr(buff + 3, '#') + 1));
+	else if (!strncmp(buff, "plv", 3))
+		monitor_plv(s, fd, atoi(strchr(buff + 3, '#') + 1));
+	else if (!strncmp(buff, "pin", 3))
+		monitor_pin(s, fd, atoi(strchr(buff + 3, '#') + 1));
+	else if (!strcmp(buff, "sgt\n"))
+		monitor_sgt(s, fd);
+	else if (!strncmp(buff, "sst", 3))
+		monitor_sst(s, fd, (s->time = atoi(buff + 3)));
+	send(fd, "suc\n", 4, 0);
 }
 
 void	handle_player(t_state *s, int fd, char *buff)
 {
 
-}
-
-t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
-{
-	t_list		*elem;
-	t_player	player;
-	int			i;
-
-	bzero(&player, sizeof(player));
-	player.player_no = s->n_players++;
-	i = 0;
-	while (strcmp(s->teams[i].name, buff))
-		i++;
-	s->teams[i].nb_client--;
-	player.team_no = i;
-	player.direction = RAND(4);
-	player.x = egg ? egg->x : RAND(s->size_x);
-	player.y = egg ? egg->y : RAND(s->size_y);
-	elem = ft_lstnew(&player, sizeof(t_player));
-	return (elem->content);
 }
 
 void	handle_unknown(t_state *s, int fd, char *buff)
@@ -103,7 +106,7 @@ void	client_read(t_state *s, int fd)
 	char	buff[STRBUFF_SIZE];
 	int		r;
 
-	r = recv(fd, buff, 255, 0);
+	r = recv(fd, buff, STRBUFF_SIZE - 1, 0);
 	if (r <= 0)
 	{
 		close(fd);
@@ -111,6 +114,7 @@ void	client_read(t_state *s, int fd)
 		{
 			s->teams[s->clients[fd].player->team_no].nb_client++;
 			s->n_players--;
+			free(s->clients[fd].player);
 		}
 		//TODO: possibly drop stuff?
 		FD_CLR(fd, &(s->fd_read));

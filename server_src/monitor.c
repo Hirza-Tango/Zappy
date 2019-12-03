@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 11:33:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:50:59 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 11:43:26 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,22 @@ void	monitor_smg(t_state *s, char *message)
 
 	snprintf(buff, STRBUFF_SIZE, "smg %s\n", message);
 	send_all_monitors(s, buff);
+}
+
+void	monitor_sst(t_state *s, int fd, int time)
+{
+	size_t	i;
+
+	if (time > 0)
+	{
+		s->time = time;
+		i = 0;
+		while (++i <= s->max_fd)
+			if (s->clients[i].type == MONITOR)
+				monitor_sgt(s, i);
+	}
+	else
+		send(fd, "sbp\n", 4, 0);
 }
 
 void	init_monitor(t_state *s, int fd)
