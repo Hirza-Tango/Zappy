@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:33:13 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:50:31 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 14:06:28 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	monitor_pic(t_state *s, t_player *player1)
 	snprintf(buff, STRBUFF_SIZE, "pic %u %u %u", player1->x, player1->y, player1->level);
 	send_all_monitors(s, buff);
 	i = -1;
-	while(++i < s->max_clients)
+	while(++i < s->max_fd)
 	{
 		if (s->clients[i].type != PLAYER)
 			continue ;

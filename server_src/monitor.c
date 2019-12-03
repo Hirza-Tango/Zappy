@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 11:33:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 11:43:26 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 14:06:01 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	init_monitor(t_state *s, int fd)
 	monitor_mct(s, fd);
 	monitor_tna(s, fd);
 	i = -1;
-	while (++i < s->max_clients)
+	while (++i < s->max_fd)
 		if (s->clients[i].type == PLAYER)
 			monitor_pnw(s, fd, s->clients[i].player);
 	list = s->eggs;

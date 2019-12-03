@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 11:47:05 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 12:46:38 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	handle_unknown(t_state *s, int fd, char *buff)
 	{
 		if (!strcmp(s->teams[i].name, buff))
 		{
-			if (s->teams[i].nb_client < 1)
+			if (!s->teams[i].nb_client)
 				send(fd, "Team is full\n", 13, 0);
 			else
 			{

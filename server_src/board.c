@@ -6,24 +6,11 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 15:54:31 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 13:27:16 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/03 12:45:22 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
-
-long	player_compare(const void *a, const void *b)
-{
-	if (((t_player *)a)->x != ((t_player *)b)->x)
-		return ((t_player *)a)->x - ((t_player *)b)->x;
-	return (((t_player *)a)->y - ((t_player *)b)->y);
-}
-
-char	*look(t_state *s, unsigned x, unsigned y)
-{
-	//TODO: adjust for new resources
-	return (NULL);
-}
 
 void	gen_board(t_state *s)
 {
