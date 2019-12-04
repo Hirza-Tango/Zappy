@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 15:25:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 13:06:45 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 17:07:55 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ void	exit_error(char *message, int code)
 
 struct timespec	*add_time(struct timespec *a, long double b)
 {
-	long	nanoseconds;
-	double	seconds;
+	long		nanoseconds;
+	long double	seconds;
 
 	nanoseconds = (long)(modfl(b, &seconds) * 1E9);
 	if (a->tv_nsec + nanoseconds >= BILLION)

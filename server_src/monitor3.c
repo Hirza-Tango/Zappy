@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:33:13 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 14:06:28 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 18:01:35 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	monitor_pex(t_state *s, t_player *p)
 void	monitor_pbc(t_state *s, t_player *p, char *message)
 {
 	char	buff[STRBUFF_SIZE];
-	snprintf(buff, STRBUFF_SIZE, "pbc #%zu %s\n", p->player_no, message);
+	snprintf(buff, STRBUFF_SIZE, "pbc #%zu %s", p->player_no, message);
 	send_all_monitors(s, buff);
 }
 
@@ -35,8 +35,8 @@ void	monitor_pic(t_state *s, t_player *player1)
 
 	snprintf(buff, STRBUFF_SIZE, "pic %u %u %u", player1->x, player1->y, player1->level);
 	send_all_monitors(s, buff);
-	i = -1;
-	while(++i < s->max_fd)
+	i = -1UL;
+	while(++i <= s->max_fd)
 	{
 		if (s->clients[i].type != PLAYER)
 			continue ;

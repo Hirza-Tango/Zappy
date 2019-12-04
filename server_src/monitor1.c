@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:31:25 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 16:36:52 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 18:38:01 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	monitor_mct(t_state *s, int fd)
 	unsigned int j;
 
 	i = -1;
-	while (++ i < s->size_x)
+	while (++i < s->size_x)
 	{
 		j = -1;
 		while (++j < s->size_y)

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 13:21:23 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 18:32:45 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@ void	handle_monitor(t_state *s, int fd, char *buff)
 		monitor_msz(s, fd);
 	else if (!strncmp(buff, "bct", 3))
 	{
-		//TODO: test strtok implementation
-		monitor_bct(s, fd, atoi(strtok_r(buff + 3, " ", &buff)),
-			atoi(strtok_r(buff + 3, " ", &buff)));
-		strtok_r(NULL, "", &buff);
+		//FIXME: misbehaves when repeating the same 1st argument
+		monitor_bct(s, fd, atoi(strchr(buff, ' ')),
+			atoi(strrchr(buff, ' ')));
 	}
 	else if (!strcmp(buff, "mct\n"))
 		monitor_mct(s, fd);
@@ -37,36 +36,40 @@ void	handle_monitor(t_state *s, int fd, char *buff)
 		monitor_sgt(s, fd);
 	else if (!strncmp(buff, "sst", 3))
 		monitor_sst(s, fd, (s->time = atoi(buff + 3)));
-	send(fd, "suc\n", 4, 0);
+	else
+		send(fd, "suc\n", 4, 0);
 }
 
+//TODO: stop handling until ready
 void	handle_player(t_state *s, int fd, char *buff)
 {
 	t_player *player = s->clients[fd].player;
 	if (!strcmp(buff, "advance\n"))
-		set_action(player, player_advance, 7 / s->time, NULL);
+		set_action(player, player_advance, 7.0 / s->time, NULL);
 	else if (!strcmp(buff, "left\n"))
-		set_action(player, player_left, 7 / s->time, NULL);
+		set_action(player, player_left, 7.0 / s->time, NULL);
 	else if (!strcmp(buff, "right\n"))
-		set_action(player, player_right, 7 / s->time, NULL);
+		set_action(player, player_right, 7.0 / s->time, NULL);
 	else if (!strcmp(buff, "see\n"))
-		set_action(player, player_see, 7 / s->time, NULL);
+		set_action(player, player_see, 7.0 / s->time, NULL);
 	else if (!strcmp(buff, "inventory\n"))
-		set_action(player, player_inventory, 1 / s->time, NULL);
+		set_action(player, player_inventory, 1.0 / s->time, NULL);
 	else if (!strncmp(buff, "take", 4))
-		set_action(player, player_take, 7 / s->time, strdup(buff + 4));
+		set_action(player, player_take, 7.0 / s->time, strdup(buff + 4));
 	else if (!strncmp(buff, "put", 3))
-		set_action(player, player_put, 7 / s->time, strdup(buff + 3));
+		set_action(player, player_put, 7.0 / s->time, strdup(buff + 3));
 	else if (!strcmp(buff, "kick\n"))
-		set_action(player, player_kick, 7 / s->time, NULL);
+		set_action(player, player_kick, 7.0 / s->time, NULL);
 	else if (!strncmp(buff, "broadcast", 9))
-		set_action(player, player_broadcast, 7 / s->time, strdup(buff + 10));
+		set_action(player, player_broadcast, 7.0 / s->time, strdup(buff + 10));
 	else if (!strcmp(buff, "incantation"))
 		player_incantation_start(s, fd);
 	else if (!strcmp(buff, "fork\n"))
-		set_action(player, player_kick, 42 / s->time, NULL);
+		set_action(player, player_kick, 42.0 / s->time, NULL);
 	else if (!strcmp(buff, "connect_nbr\n"))
 		player_connect_nbr(s, fd);
+	else
+		send(fd, "Unknown command\n", 16, 0);
 }
 
 void	handle_unknown(t_state *s, int fd, char *buff)
@@ -80,9 +83,9 @@ void	handle_unknown(t_state *s, int fd, char *buff)
 		init_monitor(s, fd);
 		return ;
 	}
-	i = 0;
+	i = -1UL;
 	buff[strlen(buff) - 1] = 0;
-	while (i < s->n_teams)
+	while (++i < s->n_teams)
 	{
 		if (!strcmp(s->teams[i].name, buff))
 		{

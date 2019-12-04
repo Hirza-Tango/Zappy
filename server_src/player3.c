@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:28:02 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 17:04:24 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 18:01:27 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ void		player_broadcast(t_state *s, int fd, void *message)
 			send(i, &direction, 1, 0);
 			send(i, ",", 1, 0);
 			send(i, message, strlen(message), 0);
-			send(i, "\n", 1, 0);
 		}
 	send(fd, "ok\n", 3, 0);
 	monitor_pbc(s, player, message);

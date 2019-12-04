@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:27:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 13:21:05 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 17:52:37 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void		player_incantation_end(t_state *s, int fd, void *unused)
 	t_player	*player;
 	int			result;
 	int			i;
-	int			j;
 
 	result = 0;
 	player = s->clients[fd].player;
@@ -33,7 +32,7 @@ void		player_incantation_end(t_state *s, int fd, void *unused)
 	if (!result)
 		return ;
 	i = -1;
-	while (++i < s->max_fd)
+	while (++i <= s->max_fd)
 	{
 		if (s->clients[i].type != PLAYER || s->clients[i].player->x != player->x
 			|| s->clients[i].player->x != player->y)
@@ -70,13 +69,13 @@ void		player_kick(t_state *s, int fd, void *unused)
 
 	player = s->clients[fd].player;
 	i = -1;
-	while (++i < s->max_fd)
+	while (++i <= s->max_fd)
 		if (s->clients[i].type == PLAYER &&
 			s->clients[i].player->next_action == player_incantation_end)
 			return ((void)send(fd, "ko\n", 3, 0));
 	monitor_pex(s, player);
 	i = -1;
-	while (++i < s->max_fd)
+	while (++i <= s->max_fd)
 		if (s->clients[i].type == PLAYER && s->clients[i].player->x
 			== player->x && s->clients[i].player->y == player->y)
 			get_kicked(s, player->direction, i);

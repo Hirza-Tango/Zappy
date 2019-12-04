@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:32:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 16:32:58 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 17:52:18 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	monitor_ppo(t_state *s, int fd, unsigned int player_no)
 	size_t		i;
 
 	i = -1;
-	while (++i < s->max_fd)
+	while (++i <= s->max_fd)
 	{
 		if (s->clients[i].type == PLAYER &&
 			s->clients[i].player->player_no == player_no)
@@ -71,8 +71,8 @@ void	monitor_plv(t_state *s, int fd, unsigned int player_no)
 	t_player	*player;
 	size_t		i;
 
-	i = -1;
-	while (++i < s->max_fd)
+	i = -1UL;
+	while (++i <= s->max_fd)
 	{
 		if (s->clients[i].type == PLAYER &&
 			s->clients[i].player->player_no == player_no)
@@ -99,7 +99,7 @@ void	monitor_pin(t_state *s, int fd, unsigned int player_no)
 
 	i = -1;
 	player = NULL;
-	while (++i < s->max_fd)
+	while (++i <= s->max_fd)
 	{
 		if (s->clients[i].type == PLAYER &&
 			s->clients[i].player->player_no == player_no)

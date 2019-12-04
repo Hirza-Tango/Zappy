@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 10:52:30 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 13:15:10 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 17:15:41 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
 	struct timespec	t;
 
 	player = (t_player *)malloc(sizeof(t_player));
-	bzero(&player, sizeof(player));
+	bzero(player, sizeof(t_player));
 	player->player_no = s->n_players++;
 	i = 0;
 	while (strcmp(s->teams[i].name, buff))

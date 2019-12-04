@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:25:47 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 16:53:02 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 18:04:58 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void		see_square(t_state *s, int fd, int x, int y)
 		}
 	}
 	i = -1;
-	while (++i < s->max_fd)
+	while (++i <= s->max_fd)
 	{
 		if (s->clients[i].type == PLAYER && i != fd)
 		{
@@ -54,6 +54,7 @@ void			player_see(t_state *s, int fd, void *unused)
 	while (++i <= player->level)
 	{
 		j = player->x - i - 1;
+		//FIXME: sight radius is fucked
 		while (++j <= player->x + i)
 		{
 			if (player->direction == 0)
@@ -65,7 +66,8 @@ void			player_see(t_state *s, int fd, void *unused)
 			else
 				see_square(s, fd, j % s->size_y,(player->x - i) % s->size_x);
 		}
-		send(fd, ", ", 1, 0);
+		if (i != player->level)
+			send(fd, ", ", 1, 0);
 	}
 	send(fd, "}\n", 2, 0);
 }
