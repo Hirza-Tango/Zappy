@@ -6,22 +6,26 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 18:32:45 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 18:46:46 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
+/*
+** Forgive me code spaghetti monster, for I have sinned
+*/
 void	handle_monitor(t_state *s, int fd, char *buff)
 {
+	char	*arg1;
+	char	*arg2;
+
 	if (!strcmp(buff, "msz\n"))
 		monitor_msz(s, fd);
 	else if (!strncmp(buff, "bct", 3))
-	{
-		//FIXME: misbehaves when repeating the same 1st argument
-		monitor_bct(s, fd, atoi(strchr(buff, ' ')),
-			atoi(strrchr(buff, ' ')));
-	}
+		(arg1 = strchr(buff, ' ')) && (arg2 = strrchr(buff, ' ')) &&
+			arg1 != arg2 ? monitor_bct(s, fd, atoi(arg1), atoi(arg2)) :
+			send(fd, "sbp\n", 4, 0);
 	else if (!strcmp(buff, "mct\n"))
 		monitor_mct(s, fd);
 	else if (!strcmp(buff, "tna\n"))
