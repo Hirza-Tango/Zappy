@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 17:02:59 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 13:21:23 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,12 +135,7 @@ void	client_read(t_state *s, int fd)
 	{
 		close(fd);
 		if (s->clients[fd].type == PLAYER)
-		{
-			s->teams[s->clients[fd].player->team_no].nb_client++;
-			s->n_players--;
-			free(s->clients[fd].player);
-		}
-		//TODO: possibly drop stuff?
+			player_death(s, fd);
 		FD_CLR(fd, &(s->fd_read));
 		cbuff_destroy(s->clients[fd].buf_read);
 		bzero(&s->clients[fd], sizeof(t_client));

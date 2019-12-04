@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 17:03:48 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 13:13:42 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define MAX(x,y) x > y ? x : y
 # define RAND(x) (rand() % x)
 # define STRBUFF_SIZE 256
+# define BILLION 1000000000
 
 enum					e_client_type
 {
@@ -89,25 +90,22 @@ static const t_resource_entry	g_resources_info[NUM_RESOURCES] = {
 	{"thystame", 1, {0, 0, 0, 0, 0, 0, 1}}
 };
 
+typedef struct			s_state t_state;
+
 typedef struct			s_player
 {
 	unsigned int	x;
 	unsigned int	y;
 	size_t			player_no;
 	size_t			team_no;
-	void			(*next_action)();
-	time_t			resolution_time;
+	void			(*next_action)(t_state *, int, void *);
+	struct timespec	resolution_time;
 	unsigned int	level;
 	unsigned int	inventory[NUM_RESOURCES];
+	struct timespec	death_time;
 	void			*option;
 	unsigned char	direction;
 }						t_player;
-
-typedef struct			s_team
-{
-	char			*name;
-	unsigned int	nb_client;
-}						t_team;
 
 typedef struct			s_client
 {
@@ -116,6 +114,12 @@ typedef struct			s_client
 	t_cbuff				buf_read;
 }						t_client;
 
+typedef struct			s_team
+{
+	char			*name;
+	unsigned int	nb_client;
+}						t_team;
+
 typedef struct			s_egg
 {
 	unsigned int	x;
@@ -123,7 +127,8 @@ typedef struct			s_egg
 	size_t			player_no;
 	unsigned int	egg_no;
 	unsigned int	team_no;
-	time_t			spawn_time;
+	struct timespec	spawn_time;
+	struct timespec	death_time;
 }						t_egg;
 
 typedef struct			s_state
@@ -146,6 +151,8 @@ typedef struct			s_state
 }						t_state;
 
 void					exit_error(char *message, int code);
+struct timespec			*add_time(struct timespec *a, long double b);
+
 void					parse_args(int argc, char **argv, t_state *state);
 void					create_listener(t_state *s);
 void					communicate(t_state *s);
@@ -156,7 +163,7 @@ void					execute(t_state *s);
 
 t_player				*new_player(t_state *s, int fd, char *buff, t_egg *egg);
 void					set_action(t_player *player,
-	void (f)(t_state *, int, void *), time_t t, void *option);
+	void (f)(t_state *, int, void *), double t, void *option);
 void					player_advance(t_state *s, int fd, void *unused);
 void					player_left(t_state *s, int fd, void *unused);
 void					player_right(t_state *s, int fd, void *unused);
@@ -170,6 +177,7 @@ void					player_kick(t_state *s, int fd, void *unused);
 void					player_fork(t_state *s, int fd, void *unused);
 void					player_broadcast(t_state *s, int fd, void *message);
 void					player_connect_nbr(t_state *s, int fd);
+void					player_death(t_state *s, int fd);
 
 void					init_monitor(t_state *s, int fd);
 void					send_all_monitors(t_state *s, char *buffer);

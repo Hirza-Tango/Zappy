@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:27:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 17:02:31 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 13:21:05 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,16 @@ void		player_kick(t_state *s, int fd, void *unused)
 			== player->x && s->clients[i].player->y == player->y)
 			get_kicked(s, player->direction, i);
 	send(fd, "ok\n", 3, 0);
+}
+
+void		player_death(t_state *s, int fd)
+{
+	s->teams[s->clients[fd].player->team_no].nb_client++;
+	s->n_players--;
+	s->clients[fd].type = UNKNOWN;
+	send(fd, "death\n", 6, 0);
+	monitor_pdi(s, s->clients[fd].player);
+	free(s->clients[fd].player);
+	s->clients[fd].player = NULL;
+	//TODO: drop stuff?
 }

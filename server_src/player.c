@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 10:52:30 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 17:03:12 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/04 13:15:10 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 //TODO: fix up with eggs, monitor notification and such
 t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
 {
-	t_player	*player;
-	int			i;
+	t_player		*player;
+	int				i;
+	struct timespec	t;
 
 	player = (t_player *)malloc(sizeof(t_player));
 	bzero(&player, sizeof(player));
@@ -31,14 +32,23 @@ t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
 	player->level = 1;
 	player->x = egg ? egg->x : RAND(s->size_x);
 	player->y = egg ? egg->y : RAND(s->size_y);
+	if (egg)
+		player->death_time = egg->death_time;
+	else
+	{
+		clock_gettime(CLOCK_MONOTONIC, &player->death_time);
+		add_time(&player->death_time, LIFE_DURATION * 10/s->time);
+	}
 	return (player);
 }
 
+
 void	set_action(t_player *player, void (f)(t_state *, int, void *),
-	time_t t, void *option)
+	double t, void *option)
 {
 	player->next_action = f;
-	player->resolution_time = time(NULL) + t;
+	clock_gettime(CLOCK_MONOTONIC, &player->resolution_time);
+	add_time(&player->resolution_time, t);
 	player->option = option;
 }
 
