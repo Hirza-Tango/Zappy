@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 16:27:20 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 16:41:45 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** Forgive me code spaghetti monster, for I have sinned
 */
-void	handle_monitor(t_state *s, int fd, char *buff)
+static void	handle_monitor(t_state *s, int fd, char *buff)
 {
 	char	*arg1;
 	char	*arg2;
@@ -46,10 +46,8 @@ void	handle_monitor(t_state *s, int fd, char *buff)
 
 //TODO: stop handling until ready
 //TODO: reduce to 25 lines or split
-void	handle_player(t_state *s, int fd, char *buff)
+static void	handle_player(t_state *s, int fd, char *buff, t_player *player)
 {
-	t_player *player = s->clients[fd].player;
-
 	if (!strcmp(buff, "advance\n"))
 		set_action(player, player_advance, 7.0 / s->time, NULL);
 	else if (!strcmp(buff, "left\n"))
@@ -78,7 +76,7 @@ void	handle_player(t_state *s, int fd, char *buff)
 		send(fd, "Unknown command\n", 16, 0);
 }
 
-void	handle_unknown(t_state *s, int fd, char *buff)
+static void	handle_unknown(t_state *s, int fd, char *buff)
 {
 	size_t	i;
 	t_egg	*egg;
@@ -122,7 +120,7 @@ void	handle(t_state *s)
 		if (s->clients[i].type == UNKNOWN)
 			handle_unknown(s, i, buff);
 		else if (s->clients[i].type == PLAYER)
-			handle_player(s, i, buff);
+			handle_player(s, i, buff, s->clients[i].player);
 		else if (s->clients[i].type == MONITOR)
 			handle_monitor(s, i, buff);
 	}
