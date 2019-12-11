@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 18:46:46 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 14:08:27 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,11 @@ void	handle_monitor(t_state *s, int fd, char *buff)
 }
 
 //TODO: stop handling until ready
+//TODO: reduce to 25 lines or split
 void	handle_player(t_state *s, int fd, char *buff)
 {
 	t_player *player = s->clients[fd].player;
+
 	if (!strcmp(buff, "advance\n"))
 		set_action(player, player_advance, 7.0 / s->time, NULL);
 	else if (!strcmp(buff, "left\n"))
@@ -84,31 +86,25 @@ void	handle_unknown(t_state *s, int fd, char *buff)
 	if (!strcmp(buff, "GRAPHIC\n"))
 	{
 		s->clients[fd].type = MONITOR;
-		init_monitor(s, fd);
-		return ;
+		return (init_monitor(s, fd));
 	}
 	i = -1UL;
 	buff[strlen(buff) - 1] = 0;
 	while (++i < s->n_teams)
-	{
 		if (!strcmp(s->teams[i].name, buff))
-		{
-			if (!s->teams[i].nb_client)
-				send(fd, "Team is full\n", 13, 0);
-			else
-			{
-				egg = NULL;//TODO: if egg is available, spawn at egg
-				s->clients[fd].type = PLAYER;
-				s->clients[fd].player = new_player(s, fd, buff, egg);
-				send(fd, buff, snprintf(buff, STRBUFF_SIZE, "%u\n%u %u\n",
-					s->teams[i].nb_client, s->size_x, s->size_y), 0);
-				monitor_pnw(s, -1, s->clients[fd].player);
-			}
-			return ;
-		}
-		i++;
-	}
-	send(fd, "Unknown team\n", 13, 0);
+			break ;
+	if (i == s->n_teams)
+		return (send(fd, "Unknown team\n", 13, 0));
+	if (!s->teams[i].nb_client)
+		return ((void)send(fd, "Team is full\n", 13, 0));
+	if ((egg = s->teams[i].eggs))
+		s->teams[i].eggs = s->teams[i].eggs->next;
+	s->clients[fd].type = PLAYER;
+	s->clients[fd].player = new_player(s, buff, egg);
+	egg ? free(egg) : (void)0;
+	send(fd, buff, snprintf(buff, STRBUFF_SIZE, "%u\n%u %u\n",
+		s->teams[i].nb_client, s->size_x, s->size_y), 0);
+	monitor_pnw(s, -1, s->clients[fd].player);
 }
 
 void	handle(t_state *s)
@@ -132,6 +128,8 @@ void	handle(t_state *s)
 	}
 }
 
+//FIXME: randomly won't read commands
+//FIXME: commands aren't added to queue
 void	client_read(t_state *s, int fd)
 {
 	char	buff[STRBUFF_SIZE];

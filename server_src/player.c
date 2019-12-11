@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 10:52:30 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 17:15:41 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 14:15:06 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,10 @@
 
 
 //TODO: fix up with eggs, monitor notification and such
-t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
+t_player	*new_player(t_state *s, char *buff, t_egg *egg)
 {
 	t_player		*player;
 	int				i;
-	struct timespec	t;
 
 	player = (t_player *)malloc(sizeof(t_player));
 	bzero(player, sizeof(t_player));
@@ -32,13 +31,10 @@ t_player	*new_player(t_state *s, int fd, char *buff, t_egg *egg)
 	player->level = 1;
 	player->x = egg ? egg->x : RAND(s->size_x);
 	player->y = egg ? egg->y : RAND(s->size_y);
-	if (egg)
-		player->death_time = egg->death_time;
-	else
-	{
+	egg ? (player->death_time = egg->death_time) :
 		clock_gettime(CLOCK_MONOTONIC, &player->death_time);
+	egg ? monitor_ebo(s, egg->egg_no) :
 		add_time(&player->death_time, LIFE_DURATION * 10/s->time);
-	}
 	return (player);
 }
 
@@ -61,7 +57,8 @@ void	set_action(t_player *player, void (f)(t_state *, int, void *),
 void		player_advance(t_state *s, int fd, void *unused)
 {
 	t_player	*player;
-(void)unused;
+
+	(void)unused;
 	player = s->clients[fd].player;
 	if (player->direction == 0)
 		player->y = (player->y - 1) % s->size_y;
@@ -77,16 +74,16 @@ void		player_advance(t_state *s, int fd, void *unused)
 
 void		player_left(t_state *s, int fd, void *unused)
 {
-(void)unused;
+	(void)unused;
 	s->clients[fd].player->direction =
-		(s->clients[fd].player->direction - 1) % 4;
+		(s->clients[fd].player->direction + 3) % 4;
 	send(fd, "ok\n", 3, 0);
 	monitor_ppo(s, -1, s->clients[fd].player->player_no);
 }
 
 void		player_right(t_state *s, int fd, void *unused)
 {
-(void)unused;
+	(void)unused;
 	s->clients[fd].player->direction =
 		(s->clients[fd].player->direction + 1) % 4;
 	send(fd, "ok\n", 3, 0);

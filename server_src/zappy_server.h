@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 18:30:37 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 13:44:15 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ typedef struct			s_team
 {
 	char			*name;
 	unsigned int	nb_client;
+	t_list			*eggs;
 }						t_team;
 
 typedef struct			s_egg
@@ -143,7 +144,6 @@ typedef struct			s_state
 	t_team			*teams;
 	size_t			n_teams;
 	size_t			n_players;
-	t_list			*eggs;
 	size_t			n_eggs;
 	unsigned int	size_x;
 	unsigned int	size_y;
@@ -161,7 +161,7 @@ void					client_read(t_state *s, int fd);
 void					handle(t_state *s);
 void					execute(t_state *s);
 
-t_player				*new_player(t_state *s, int fd, char *buff, t_egg *egg);
+t_player				*new_player(t_state *s, char *buff, t_egg *egg);
 void					set_action(t_player *player,
 	void (f)(t_state *, int, void *), double t, void *option);
 void					player_advance(t_state *s, int fd, void *unused);

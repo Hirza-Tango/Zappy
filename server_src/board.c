@@ -6,37 +6,52 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 15:54:31 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 17:05:31 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/09 11:56:48 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
-void	gen_board(t_state *s)
+static unsigned int	***allocate_board(size_t x, size_t y)
 {
-	size_t		i;
-	size_t		j;
+	size_t			i;
+	size_t			j;
+	unsigned int	***board;
 
-	s->board = (unsigned int ***)malloc(s->size_x * sizeof (unsigned int **));
+	board = (unsigned int ***)malloc(x * sizeof (unsigned int **));
 	i = -1;
-	while (++i < s->size_x)
+	while (++i < x)
 	{
-		s->board[i] = (unsigned int **)malloc(s->size_y * sizeof (unsigned int *));
+		board[i] = (unsigned int **)malloc(y * sizeof (unsigned int *));
 		j = -1;
-		while (++j < s->size_y)
+		while (++j < y)
 		{
-			s->board[i][j] = (unsigned int *)malloc(NUM_RESOURCES * sizeof(unsigned int));
-			bzero(s->board[i][j], NUM_RESOURCES * sizeof(unsigned int));
+			board[i][j] = (unsigned int *)malloc(
+				NUM_RESOURCES * sizeof(unsigned int));
+			bzero(board[i][j], NUM_RESOURCES * sizeof(unsigned int));
 		}
 	}
-	((t_resource_entry *)g_resources_info)[0].team_requirement =
-		(s->size_x * s->size_y) / LIFE_DURATION * TEAM_MAX_SIZE * FOOD_MULTIPLIER;
-	//FIXME: fix lack of food
+	return board;
+}
+
+void				gen_board(t_state *s)
+{
+	size_t	i;
+	size_t	j;
+	size_t	num;
+
+	s->board = allocate_board(s->size_x, s->size_y);
 	i = -1;
 	while (++i < NUM_RESOURCES)
 	{
 		j = -1;
-		while (++j < g_resources_info[i].team_requirement * RESOURCE_MULTIPLIER * s->n_teams)
+		if (!i)
+			num = (s->size_x * s->size_y) /
+				LIFE_DURATION * TEAM_MAX_SIZE * FOOD_MULTIPLIER;
+		else
+			num = g_resources_info[i].team_requirement *
+				RESOURCE_MULTIPLIER * s->n_teams;
+		while (++j < num)
 			(s->board[RAND(s->size_x)][RAND(s->size_y)][i])++;
 	}
 }

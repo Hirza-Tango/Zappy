@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 11:33:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 17:52:03 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 13:50:15 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,24 @@ void	monitor_sst(t_state *s, int fd, int time)
 void	init_monitor(t_state *s, int fd)
 {
 	t_list	*list;
-	size_t	i;
+	int		i;
 
 	monitor_msz(s, fd);
 	monitor_sgt(s, fd);
 	monitor_mct(s, fd);
 	monitor_tna(s, fd);
-	i = -1UL;
+	i = -1;
 	while (++i <= s->max_fd)
 		if (s->clients[i].type == PLAYER)
 			monitor_pnw(s, fd, s->clients[i].player);
-	list = s->eggs;
-	while (list)
+	i = -1;
+	while (++i < s->n_teams)
 	{
-		monitor_enw(s, fd, list->content);
-		list = list->next;
+		list = s->teams[i].eggs;
+		while (list)
+		{
+			monitor_enw(s, fd, list->content);
+			list = list->next;
+		}
 	}
 }

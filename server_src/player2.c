@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:27:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 17:52:37 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/09 15:28:05 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void		player_incantation_end(t_state *s, int fd, void *unused)
 
 	result = 0;
 	player = s->clients[fd].player;
+	(void)unused;
 	//TODO:this
 	monitor_pie(s, player->x, player->y, result);
 	if (!result)
@@ -67,6 +68,7 @@ void		player_kick(t_state *s, int fd, void *unused)
 	t_player	*player;
 	int			i;
 
+	(void)unused;
 	player = s->clients[fd].player;
 	i = -1;
 	while (++i <= s->max_fd)
@@ -85,7 +87,6 @@ void		player_kick(t_state *s, int fd, void *unused)
 void		player_death(t_state *s, int fd)
 {
 	s->teams[s->clients[fd].player->team_no].nb_client++;
-	s->n_players--;
 	s->clients[fd].type = UNKNOWN;
 	send(fd, "death\n", 6, 0);
 	monitor_pdi(s, s->clients[fd].player);

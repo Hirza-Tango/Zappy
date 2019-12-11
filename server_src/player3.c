@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:28:02 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 18:01:27 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/09 11:17:51 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ static int	sound_direction(t_player *player1, t_player *player2,
 
 void		player_fork(t_state *s, int fd, void *unused)
 {
+	(void)unused;
+	(void)s;
+	(void)fd;
 	//TODO:this
 }
 

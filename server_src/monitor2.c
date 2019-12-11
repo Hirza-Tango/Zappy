@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:32:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 17:52:18 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 14:13:01 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,22 @@ void	monitor_enw(t_state *s, int fd, t_egg *egg)
 		send(fd, buff, strlen(buff), 0);
 }
 
+void	monitor_ebo(t_state *s, unsigned int egg_no)
+{
+	char		buff[STRBUFF_SIZE];
+
+	snprintf(buff, STRBUFF_SIZE, "ebo #%u\n", egg_no);
+	send_all_monitors(s, buff);
+}
+
 void	monitor_ppo(t_state *s, int fd, unsigned int player_no)
 {
 	char		buff[STRBUFF_SIZE];
 	t_player	*player;
-	size_t		i;
+	int			i;
 
 	i = -1;
+	player = NULL;
 	while (++i <= s->max_fd)
 	{
 		if (s->clients[i].type == PLAYER &&
@@ -69,9 +78,10 @@ void	monitor_plv(t_state *s, int fd, unsigned int player_no)
 {
 	char		buff[STRBUFF_SIZE];
 	t_player	*player;
-	size_t		i;
+	int			i;
 
-	i = -1UL;
+	i = -1;
+	player = NULL;
 	while (++i <= s->max_fd)
 	{
 		if (s->clients[i].type == PLAYER &&
@@ -95,7 +105,7 @@ void	monitor_pin(t_state *s, int fd, unsigned int player_no)
 {
 	char		buff[STRBUFF_SIZE];
 	t_player	*player;
-	size_t		i;
+	int			i;
 
 	i = -1;
 	player = NULL;

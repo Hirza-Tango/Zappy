@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:25:47 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/04 18:04:58 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/09 15:23:52 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 static void		see_square(t_state *s, int fd, int x, int y)
 {
-	unsigned int	i;
-	int				j;
+	int				i;
+	unsigned int	j;
 	char			started;
 
 	i = -1;
 	started = 0;
+	printf("Player %i is looking at square %i %i\n", fd, x, y);
 	while (++i < NUM_RESOURCES)
 	{
 		j = -1;
@@ -43,9 +44,9 @@ static void		see_square(t_state *s, int fd, int x, int y)
 
 void			player_see(t_state *s, int fd, void *unused)
 {
-	int			i;
-	int			j;
-	t_player	*player;
+	unsigned int	i;
+	unsigned int	j;
+	t_player		*player;
 
 	(void)unused;
 	send(fd, "{", 1, 0);
@@ -65,9 +66,9 @@ void			player_see(t_state *s, int fd, void *unused)
 				see_square(s, fd, j % s->size_x,(player->y + i) % s->size_y);
 			else
 				see_square(s, fd, j % s->size_y,(player->x - i) % s->size_x);
+			if (i != player->level || j != player->x + i)
+				send(fd, ", ", 2, 0);
 		}
-		if (i != player->level)
-			send(fd, ", ", 1, 0);
 	}
 	send(fd, "}\n", 2, 0);
 }
@@ -77,6 +78,7 @@ void		player_inventory(t_state *s, int fd, void *unused)
 	char			buff[4096];
 	unsigned int	*inv;
 
+	(void)unused;
 	inv = s->clients[fd].player->inventory;
 	snprintf(buff, 4096, "{food %u, linemate %u, deraumere %u, sibur %u, "
 		"mendiane %u, phiras %u, thystamine %u}\n", inv[0], inv[1], inv[2],

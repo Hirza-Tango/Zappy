@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:44:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:13:59 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 13:49:00 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,10 @@ static void	init_states(t_state *state)
 	state->clients = (t_client *)malloc(rlp.rlim_cur * sizeof(t_client));
 	i = 0;
 	while (i < state->n_teams)
+	{
+		state->teams[i++].eggs = NULL;
 		state->teams[i++].nb_client = state->allowed_players;
-	state->eggs = NULL;
+	}
 }
 
 void		parse_args(int argc, char **argv, t_state *state)
