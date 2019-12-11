@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 13:44:15 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 16:28:54 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,7 @@ void					monitor_sgt(t_state *s, int fd);
 void					monitor_sst(t_state *s, int fd, int time);
 void					monitor_pnw(t_state *s, int fd, t_player *player);
 void					monitor_enw(t_state *s, int fd, t_egg *egg);
+void					monitor_ebo(t_state *s, unsigned int egg_no);
 void					monitor_ppo(t_state *s, int fd, unsigned int player_no);
 void					monitor_plv(t_state *s, int fd, unsigned int player_no);
 void					monitor_pin(t_state *s, int fd, unsigned int player_no);

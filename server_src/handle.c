@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 14:08:27 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 16:27:20 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,10 @@ void	handle_unknown(t_state *s, int fd, char *buff)
 		if (!strcmp(s->teams[i].name, buff))
 			break ;
 	if (i == s->n_teams)
-		return (send(fd, "Unknown team\n", 13, 0));
+		return ((void)send(fd, "Unknown team\n", 13, 0));
 	if (!s->teams[i].nb_client)
 		return ((void)send(fd, "Team is full\n", 13, 0));
-	if ((egg = s->teams[i].eggs))
+	if ((egg = s->teams[i].eggs->content))
 		s->teams[i].eggs = s->teams[i].eggs->next;
 	s->clients[fd].type = PLAYER;
 	s->clients[fd].player = new_player(s, buff, egg);

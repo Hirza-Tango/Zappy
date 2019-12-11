@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 10:52:30 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 14:15:06 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/11 16:29:43 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_player	*new_player(t_state *s, char *buff, t_egg *egg)
 	player->level = 1;
 	player->x = egg ? egg->x : RAND(s->size_x);
 	player->y = egg ? egg->y : RAND(s->size_y);
-	egg ? (player->death_time = egg->death_time) :
+	egg ? (void)(player->death_time = egg->death_time) :
 		clock_gettime(CLOCK_MONOTONIC, &player->death_time);
 	egg ? monitor_ebo(s, egg->egg_no) :
 		add_time(&player->death_time, LIFE_DURATION * 10/s->time);
