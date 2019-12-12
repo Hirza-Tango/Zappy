@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/12 18:09:17 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 18:29:09 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ static void	handle_player(t_state *s, int fd, char *buff, t_player *player)
 }
 
 //TODO: shorten
+//FIXME: eggs don't EBO -> player not spawning from egg
 static void	handle_unknown(t_state *s, int fd, char *buff)
 {
 	size_t	i;
@@ -93,8 +94,8 @@ static void	handle_unknown(t_state *s, int fd, char *buff)
 	if (!s->teams[i].nb_client)
 		return ((void)send(fd, "Team is full\n", 13, 0));
 	egg = NULL;
-	if (s->teams[i].eggs &&	!((t_egg *)(egg->content))->hatch_time.tv_sec)
-		(int)(egg = s->teams[i].eggs) && (int)(s->teams[i].eggs = egg->next);
+	if (s->teams[i].eggs &&	!((t_egg *)(s->teams[i].eggs))->hatch_time.tv_sec)
+		(egg = s->teams[i].eggs) && (s->teams[i].eggs = egg->next);
 	s->clients[fd].type = PLAYER;
 	s->clients[fd].player = new_player(s, buff, egg ? egg->content : NULL);
 	egg ? free(egg->content) : (void)0;

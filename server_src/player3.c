@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:28:02 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/12 18:12:02 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 18:17:55 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ static void		player_fork_end(t_state *s, int fd, void *unused)
 	while (last->next)
 		last = last->next;
 	monitor_enw(s, -1, last->content);
+	send(fd, "ok\n", 3, 0);
 }
 
 void			player_fork(t_state *s, int fd)
