@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:25:47 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/09 15:23:52 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 17:39:02 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void			player_see(t_state *s, int fd, void *unused)
 	while (++i <= player->level)
 	{
 		j = player->x - i - 1;
-		//FIXME: sight radius is fucked
 		while (++j <= player->x + i)
 		{
 			if (player->direction == 0)

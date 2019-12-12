@@ -6,15 +6,16 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:27:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/09 15:28:05 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 17:01:27 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
+//TODO: delay further actions for other players
 void		player_incantation_start(t_state *s, int fd)
 {
-	set_action(s->clients[fd].player, player_incantation_end, 300 / s->time, 0);
+	set_action(s->clients[fd].player, player_incantation_end, 300.0 / s->time, 0);
 	//TODO:this
 	monitor_pic(s, s->clients[fd].player);
 }

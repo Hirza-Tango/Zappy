@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 16:41:45 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 18:09:17 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ static void	handle_monitor(t_state *s, int fd, char *buff)
 		send(fd, "suc\n", 4, 0);
 }
 
-//TODO: stop handling until ready
-//TODO: reduce to 25 lines or split
+//TODO: shorten or split
 static void	handle_player(t_state *s, int fd, char *buff, t_player *player)
 {
 	if (!strcmp(buff, "advance\n"))
@@ -69,23 +68,21 @@ static void	handle_player(t_state *s, int fd, char *buff, t_player *player)
 	else if (!strcmp(buff, "incantation"))
 		player_incantation_start(s, fd);
 	else if (!strcmp(buff, "fork\n"))
-		set_action(player, player_kick, 42.0 / s->time, NULL);
+		player_fork(s, fd);
 	else if (!strcmp(buff, "connect_nbr\n"))
 		player_connect_nbr(s, fd);
 	else
 		send(fd, "Unknown command\n", 16, 0);
 }
 
+//TODO: shorten
 static void	handle_unknown(t_state *s, int fd, char *buff)
 {
 	size_t	i;
-	t_egg	*egg;
+	t_list	*egg;
 
 	if (!strcmp(buff, "GRAPHIC\n"))
-	{
-		s->clients[fd].type = MONITOR;
 		return (init_monitor(s, fd));
-	}
 	i = -1UL;
 	buff[strlen(buff) - 1] = 0;
 	while (++i < s->n_teams)
@@ -95,17 +92,18 @@ static void	handle_unknown(t_state *s, int fd, char *buff)
 		return ((void)send(fd, "Unknown team\n", 13, 0));
 	if (!s->teams[i].nb_client)
 		return ((void)send(fd, "Team is full\n", 13, 0));
-	if ((egg = s->teams[i].eggs->content))
-		s->teams[i].eggs = s->teams[i].eggs->next;
+	egg = NULL;
+	if (s->teams[i].eggs &&	!((t_egg *)(egg->content))->hatch_time.tv_sec)
+		(int)(egg = s->teams[i].eggs) && (int)(s->teams[i].eggs = egg->next);
 	s->clients[fd].type = PLAYER;
-	s->clients[fd].player = new_player(s, buff, egg);
+	s->clients[fd].player = new_player(s, buff, egg ? egg->content : NULL);
+	egg ? free(egg->content) : (void)0;
 	egg ? free(egg) : (void)0;
 	send(fd, buff, snprintf(buff, STRBUFF_SIZE, "%u\n%u %u\n",
 		s->teams[i].nb_client, s->size_x, s->size_y), 0);
-	monitor_pnw(s, -1, s->clients[fd].player);
 }
 
-void	handle(t_state *s)
+void		handle(t_state *s)
 {
 	static char	buff[STRBUFF_SIZE];
 	int i;
@@ -119,7 +117,7 @@ void	handle(t_state *s)
 			continue ;
 		if (s->clients[i].type == UNKNOWN)
 			handle_unknown(s, i, buff);
-		else if (s->clients[i].type == PLAYER)
+		else if (s->clients[i].type == PLAYER && !s->clients[i].player->next_action)
 			handle_player(s, i, buff, s->clients[i].player);
 		else if (s->clients[i].type == MONITOR)
 			handle_monitor(s, i, buff);
@@ -128,7 +126,7 @@ void	handle(t_state *s)
 
 //FIXME: randomly won't read commands
 //FIXME: commands aren't added to queue
-void	client_read(t_state *s, int fd)
+void		client_read(t_state *s, int fd)
 {
 	char	buff[STRBUFF_SIZE];
 	int		r;

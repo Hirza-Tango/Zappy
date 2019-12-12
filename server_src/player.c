@@ -6,14 +6,12 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 10:52:30 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 16:29:43 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 16:59:11 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
-
-//TODO: fix up with eggs, monitor notification and such
 t_player	*new_player(t_state *s, char *buff, t_egg *egg)
 {
 	t_player		*player;
@@ -21,7 +19,7 @@ t_player	*new_player(t_state *s, char *buff, t_egg *egg)
 
 	player = (t_player *)malloc(sizeof(t_player));
 	bzero(player, sizeof(t_player));
-	player->player_no = s->n_players++;
+	player->player_no = egg ? egg->player_no : s->n_players++;
 	i = 0;
 	while (strcmp(s->teams[i].name, buff))
 		i++;
@@ -34,7 +32,8 @@ t_player	*new_player(t_state *s, char *buff, t_egg *egg)
 	egg ? (void)(player->death_time = egg->death_time) :
 		clock_gettime(CLOCK_MONOTONIC, &player->death_time);
 	egg ? monitor_ebo(s, egg->egg_no) :
-		add_time(&player->death_time, LIFE_DURATION * 10/s->time);
+		add_time(&player->death_time, (LIFE_DURATION * 10)/s->time);
+	monitor_pnw(s, -1, player);
 	return (player);
 }
 

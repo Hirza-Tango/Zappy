@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:32:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 16:27:57 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 17:42:26 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	monitor_enw(t_state *s, int fd, t_egg *egg)
 {
 	char	buff[STRBUFF_SIZE];
 
-	snprintf(buff, STRBUFF_SIZE, "enw #%u #%zu %u %u\n", egg->egg_no, egg->player_no,
-		egg->x, egg->y);
+	snprintf(buff, STRBUFF_SIZE, "enw #%zu #%zu %u %u\n",
+		egg->egg_no, egg->player_no, egg->x, egg->y);
 	if (fd < 0)
 		send_all_monitors(s, buff);
 	else

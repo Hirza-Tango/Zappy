@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:33:53 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/03 10:50:31 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 17:42:41 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	monitor_eht(t_state *s, t_egg *e)
 {
 	char	buff[STRBUFF_SIZE];
 
-	snprintf(buff, STRBUFF_SIZE, "eht #%u\n", e->egg_no);
+	snprintf(buff, STRBUFF_SIZE, "eht #%zu\n", e->egg_no);
 	send_all_monitors(s, buff);
 }
 
@@ -49,6 +49,6 @@ void	monitor_edi(t_state *s, t_egg *e)
 {
 	char	buff[STRBUFF_SIZE];
 
-	snprintf(buff, STRBUFF_SIZE, "edi #%u\n", e->egg_no);
+	snprintf(buff, STRBUFF_SIZE, "edi #%zu\n", e->egg_no);
 	send_all_monitors(s, buff);
 }

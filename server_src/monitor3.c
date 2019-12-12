@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 15:33:13 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/09 11:10:01 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 17:06:00 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	monitor_pbc(t_state *s, t_player *p, char *message)
 	send_all_monitors(s, buff);
 }
 
-/* TODO: when implementing levelling, players can't act during incantation*/
 void	monitor_pic(t_state *s, t_player *player1)
 {
 	char		buff[STRBUFF_SIZE];

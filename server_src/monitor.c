@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/26 11:33:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 13:50:15 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 16:12:12 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	init_monitor(t_state *s, int fd)
 	t_list	*list;
 	int		i;
 
+	s->clients[fd].type = MONITOR;
 	monitor_msz(s, fd);
 	monitor_sgt(s, fd);
 	monitor_mct(s, fd);

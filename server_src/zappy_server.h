@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/11 16:28:54 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/12 17:36:28 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ enum					e_resources
 # define NUM_LEVELS 7
 # define RESOURCE_MULTIPLIER s->n_teams * 1.5
 # define TEAM_MAX_SIZE 6
-# define LIFE_DURATION 126
+# define LIFE_DURATION 126.0
 # define FOOD_MULTIPLIER 2
 
 typedef struct			s_resource_entry{
@@ -126,9 +126,9 @@ typedef struct			s_egg
 	unsigned int	x;
 	unsigned int	y;
 	size_t			player_no;
-	unsigned int	egg_no;
+	size_t			egg_no;
 	unsigned int	team_no;
-	struct timespec	spawn_time;
+	struct timespec	hatch_time;
 	struct timespec	death_time;
 }						t_egg;
 
@@ -152,6 +152,7 @@ typedef struct			s_state
 
 void					exit_error(char *message, int code);
 struct timespec			*add_time(struct timespec *a, long double b);
+double					compare_time(struct timespec *a, struct timespec *b);
 
 void					parse_args(int argc, char **argv, t_state *state);
 void					create_listener(t_state *s);
@@ -174,7 +175,7 @@ void					player_put(t_state *s, int fd, void *num);
 void					player_incantation_start(t_state *s, int fd);
 void					player_incantation_end(t_state *s, int fd, void *unused);
 void					player_kick(t_state *s, int fd, void *unused);
-void					player_fork(t_state *s, int fd, void *unused);
+void					player_fork(t_state *s, int fd);
 void					player_broadcast(t_state *s, int fd, void *message);
 void					player_connect_nbr(t_state *s, int fd);
 void					player_death(t_state *s, int fd);
