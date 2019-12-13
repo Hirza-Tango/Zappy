@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 11:45:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/12 18:06:14 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/13 13:29:21 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ static void	check_eggs(t_state *s, struct timespec *t)
 			if (egg->hatch_time.tv_sec && egg->hatch_time.tv_nsec &&
 				compare_time(&egg->hatch_time, t) < 0)
 			{
-				bzero(&egg->hatch_time, sizeof(egg));
+				egg->hatch_time.tv_sec = 0;
+				egg->hatch_time.tv_nsec = 0;
 				monitor_eht(s, egg);
 				s->teams[i].nb_client++;
 			}

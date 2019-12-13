@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:27:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/12 17:01:27 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/13 14:02:00 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ void		player_kick(t_state *s, int fd, void *unused)
 
 void		player_death(t_state *s, int fd)
 {
-	s->teams[s->clients[fd].player->team_no].nb_client++;
 	s->clients[fd].type = UNKNOWN;
 	send(fd, "death\n", 6, 0);
 	monitor_pdi(s, s->clients[fd].player);
