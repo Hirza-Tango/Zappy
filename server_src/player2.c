@@ -6,41 +6,69 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:27:24 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/13 14:02:00 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/19 17:45:55 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "zappy_server.h"
 
-//TODO: delay further actions for other players
 void		player_incantation_start(t_state *s, int fd)
 {
+	int	i;
+
 	set_action(s->clients[fd].player, player_incantation_end, 300.0 / s->time, 0);
-	//TODO:this
+	i = 0;
+	while (i < s->max_fd)
+	{
+		if (s->clients[i].type == PLAYER &&
+			s->clients[i].player->x == s->clients[fd].player->x &&
+			s->clients[i].player->y == s->clients[fd].player->y &&
+			i != fd)
+			add_time(&s->clients[i].player->resolution_time, 300.0 / s->time);
+	}
 	monitor_pic(s, s->clients[fd].player);
+}
+
+static int	check_result(t_state *s, unsigned x, unsigned y, unsigned level)
+{
+	int i;
+
+	i = 0;
+	while (++i < NUM_RESOURCES)
+		if (s->board[x][y][i] < g_resources_info[i].level_requirements[level])
+			return (0);
+	i = -1;
+	while (++i < s->max_fd)
+		if (s->clients[i].type == PLAYER && s->clients[i].player->x == x &&
+			s->clients[i].player->y == y &&
+			s->clients[i].player->level != level)
+			return (0);
+	i = -1;
+	while (++i < s->max_fd)
+		if (s->clients[i].type == PLAYER && s->clients[i].player->x == x &&
+			s->clients[i].player->y == y)
+		{
+			s->clients[i].player->level++;
+			monitor_plv(s, -1, s->clients[i].player->player_no);
+		}
+	i = 0;
+	while (++i < NUM_RESOURCES)
+		s->board[x][y][i] -= g_resources_info[i].level_requirements[level];
+	return (1);
 }
 
 void		player_incantation_end(t_state *s, int fd, void *unused)
 {
 	t_player	*player;
 	int			result;
-	int			i;
 
 	result = 0;
 	player = s->clients[fd].player;
 	(void)unused;
-	//TODO:this
+	result = check_result(s, player->x, player->y, player->level);
 	monitor_pie(s, player->x, player->y, result);
 	if (!result)
 		return ;
-	i = -1;
-	while (++i <= s->max_fd)
-	{
-		if (s->clients[i].type != PLAYER || s->clients[i].player->x != player->x
-			|| s->clients[i].player->x != player->y)
-			continue ;
-		monitor_plv(s, -1, s->clients[i].player->player_no);
-	}
 	monitor_bct(s, -1, player->x, player->y);
 }
 
@@ -83,14 +111,4 @@ void		player_kick(t_state *s, int fd, void *unused)
 			== player->x && s->clients[i].player->y == player->y)
 			get_kicked(s, player->direction, i);
 	send(fd, "ok\n", 3, 0);
-}
-
-void		player_death(t_state *s, int fd)
-{
-	s->clients[fd].type = UNKNOWN;
-	send(fd, "death\n", 6, 0);
-	monitor_pdi(s, s->clients[fd].player);
-	free(s->clients[fd].player);
-	s->clients[fd].player = NULL;
-	//TODO: drop stuff?
 }

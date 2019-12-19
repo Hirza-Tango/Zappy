@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/12 17:36:28 by dslogrov         ###   ########.fr       */
+/*   Updated: 2019/12/19 17:45:40 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ enum					e_resources
 # define FOOD_MULTIPLIER 2
 
 typedef struct			s_resource_entry{
-	char	*name;
-	int		team_requirement;
-	int		level_requirements[NUM_LEVELS];
+	char			*name;
+	int				team_requirement;
+	unsigned int	level_requirements[NUM_LEVELS];
 }						t_resource_entry;
 
 /*
