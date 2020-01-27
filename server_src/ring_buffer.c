@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 17:03:35 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/11/26 13:37:22 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/27 16:34:47 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ int		cbuff_write(t_cbuff cbuff, char *data)
 
 	if (!len || len == cbuff->entry_size || cbuff->is_full)
 		return (-1);
-	if (((char *)cbuff->head)[0])
+	if (((char *)cbuff->head)[0] &&
+		!memchr(cbuff->head, '\n', cbuff->entry_size))
 	{
 		if (strlcat(cbuff->head, data, cbuff->entry_size) >= cbuff->entry_size)
 		{
