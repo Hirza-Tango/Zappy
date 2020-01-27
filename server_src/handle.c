@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/13 13:51:50 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/27 16:54:08 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,19 +114,19 @@ void		handle(t_state *s)
 	{
 		if (!FD_ISSET(i, &s->fd_read))
 			continue ;
+		if (s->clients[i].type == PLAYER && s->clients[i].player->next_action)
+			continue ;
 		if (!cbuff_read(s->clients[i].buf_read, buff))
 			continue ;
 		if (s->clients[i].type == UNKNOWN)
 			handle_unknown(s, i, buff);
-		else if (s->clients[i].type == PLAYER && !s->clients[i].player->next_action)
+		else if (s->clients[i].type == PLAYER)
 			handle_player(s, i, buff, s->clients[i].player);
 		else if (s->clients[i].type == MONITOR)
 			handle_monitor(s, i, buff);
 	}
 }
 
-//FIXME: randomly won't read commands
-//FIXME: commands aren't added to queue
 void		client_read(t_state *s, int fd)
 {
 	char	buff[STRBUFF_SIZE];
