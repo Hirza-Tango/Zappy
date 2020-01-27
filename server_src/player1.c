@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:25:47 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/12 17:39:02 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/27 16:42:49 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static void		see_square(t_state *s, int fd, int x, int y)
 
 	i = -1;
 	started = 0;
-	printf("Player %i is looking at square %i %i\n", fd, x, y);
 	while (++i < NUM_RESOURCES)
 	{
 		j = -1;
