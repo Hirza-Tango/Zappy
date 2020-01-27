@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/12 14:44:49 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/12 17:55:52 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/27 14:34:56 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	validate_args(t_state *state)
 	if (!state->port || !state->size_x || !state->size_y ||
 		!state->n_teams || !state->allowed_players)
 	{
-		dprintf(2, "Missing option\n");
+		dprintf(2, USAGE);
 		exit(MISSING_OPTION);
 	}
 }
@@ -72,7 +72,7 @@ void		parse_args(int argc, char **argv, t_state *state)
 		else if (flag == 'n')
 			parse_teams(argc, argv, state);
 		else
-			exit_error("Invalid flag", INVALID_FLAG);
+			exit_error(USAGE, INVALID_FLAG);
 	}
 	validate_args(state);
 	init_states(state);

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/19 17:45:40 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/27 14:36:33 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,13 @@
 # define RAND(x) (rand() % x)
 # define STRBUFF_SIZE 256
 # define BILLION 1000000000
+# define USAGE1 "Usage: ./server -p <port> -x <width> -y <height> -n <team> "
+# define USAGE2 "[<team>] [<team>] ... -c <nb> -t <t>\n\t-p port number\n\t"
+# define USAGE3 "-x world width\n\t-y world height-n team_name_1 team_name_2 "
+# define USAGE4 "...\n\t-c number of clients authorized at the beginning of the"
+# define USAGE5 " game\n\t-t time unit divider (the greater t is, the faster "
+# define USAGE6 "the game will go)\n"
+# define USAGE USAGE1 USAGE2 USAGE3 USAGE4 USAGE5 USAGE6
 
 enum					e_client_type
 {
