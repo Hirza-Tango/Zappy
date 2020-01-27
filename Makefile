@@ -10,18 +10,24 @@ SERVER_FILES=	args.c	execute.c	monitor.c	monitor2.c	monitor4.c		\
 	handle.c	monitor1.c	monitor3.c	monitor5.c	player.c	player2.c	\
 	player3.c	player4.c	zappy_server.c
 CLIENT_FILES= main.c
+GFX_FILES= main.c
 SERVER_FILES := $(addprefix server_src/,$(SERVER_FILES))
 CLIENT_FILES := $(addprefix client_src/,$(CLIENT_FILES))
+GFX_FILES := $(addprefix gfx_src/,$(GFX_FILES))
 
 SERVER_OBJ:=$(SERVER_FILES:server_src/%.c=build/server/%.o)
 CLIENT_OBJ:=$(CLIENT_FILES:client_src/%.c=build/client/%.o)
+GFX_OBJ:=$(GFX_FILES:gfx_src/%.c=build/gfx/%.o)
 
 $(NAME): server client gfx
 
 server: $(SERVER_OBJ) $(REL_DEPS)
-	@gcc $(CFLAGS) -o $@ $^
+	@gcc $(CFLAGS) -o $@ $^ -g
 
 client: $(CLIENT_OBJ) $(REL_DEPS)
+	@gcc $(CFLAGS) -o $@ $^
+
+gfx: $(GFX_OBJ) $(REL_DEPS)
 	@gcc $(CFLAGS) -o $@ $^
 
 $(REL_DEPS):
@@ -29,10 +35,15 @@ $(REL_DEPS):
 
 build/server/%.o: server_src/%.c
 	@mkdir -p build/server
-	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(CC) $(CFLAGS) -c $< -o $@ -g
 
 build/client/%.o: client_src/%.c
 	@mkdir -p build/client
+	@$(CC) $(CFLAGS) -c $< -o $@
+
+
+build/gfx/%.o: gfx_src/%.c
+	@mkdir -p build/gfx
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME);
