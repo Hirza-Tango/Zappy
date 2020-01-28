@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/13 18:42:42 by dslogrov          #+#    #+#             */
-/*   Updated: 2020/01/27 16:39:38 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/28 13:36:43 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ void					player_incantation_start(t_state *s, int fd);
 void					player_incantation_end(t_state *s, int fd, void *unused);
 void					player_kick(t_state *s, int fd, void *unused);
 void					player_fork(t_state *s, int fd);
-void					player_broadcast(t_state *s, int fd, void *message);
+void					player_speak(t_state *s, int fd, void *message);
 void					player_connect_nbr(t_state *s, int fd);
 void					player_death(t_state *s, int fd);
 

@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 11:45:11 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/13 13:29:21 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/28 13:37:20 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,21 @@ static void check_food(t_state *s, t_player *player, int fd, struct timespec *t)
 	}
 }
 
-//TODO: shorten
+static int	check_kill_egg(t_state *s, struct timespec *t, int i, t_list **egg_list)
+{
+	t_egg *egg;
+
+	egg = (*egg_list)->content;
+	if (compare_time(&egg->death_time, t) >= 0)
+		return (0);
+	s->teams[i].eggs = (*egg_list)->next;
+	monitor_edi(s, egg);
+	free((*egg_list)->content);
+	free((*egg_list));
+	(*egg_list) = s->teams[i].eggs;
+	return (1);
+}
+
 static void	check_eggs(t_state *s, struct timespec *t)
 {
 	size_t 	i;
@@ -61,15 +75,8 @@ static void	check_eggs(t_state *s, struct timespec *t)
 				monitor_eht(s, egg);
 				s->teams[i].nb_client++;
 			}
-			if (compare_time(&egg->death_time, t) < 0)
-			{
-				s->teams[i].eggs = egg_list->next;
-				monitor_edi(s, egg);
-				free(egg_list->content);
-				free(egg_list);
-				egg_list = s->teams[i].eggs;
+			if (check_kill_egg(s, t, i, &egg_list))
 				continue ;
-			}
 			egg_list = egg_list->next;
 		}
 	}

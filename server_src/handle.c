@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/19 12:12:12 by dslogrov          #+#    #+#             */
-/*   Updated: 2020/01/27 16:54:08 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/28 13:38:28 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,39 +44,35 @@ static void	handle_monitor(t_state *s, int fd, char *buff)
 		send(fd, "suc\n", 4, 0);
 }
 
-//TODO: shorten or split
-static void	handle_player(t_state *s, int fd, char *buff, t_player *player)
+static void	handle_player(t_state *s, int fd, char *buff, t_player *p)
 {
 	if (!strcmp(buff, "advance\n"))
-		set_action(player, player_advance, 7.0 / s->time, NULL);
+		return (set_action(p, player_advance, 7.0 / s->time, NULL));
 	else if (!strcmp(buff, "left\n"))
-		set_action(player, player_left, 7.0 / s->time, NULL);
+		return (set_action(p, player_left, 7.0 / s->time, NULL));
 	else if (!strcmp(buff, "right\n"))
-		set_action(player, player_right, 7.0 / s->time, NULL);
+		return (set_action(p, player_right, 7.0 / s->time, NULL));
 	else if (!strcmp(buff, "see\n"))
-		set_action(player, player_see, 7.0 / s->time, NULL);
+		return (set_action(p, player_see, 7.0 / s->time, NULL));
 	else if (!strcmp(buff, "inventory\n"))
-		set_action(player, player_inventory, 1.0 / s->time, NULL);
+		return (set_action(p, player_inventory, 1.0 / s->time, NULL));
 	else if (!strncmp(buff, "take", 4))
-		set_action(player, player_take, 7.0 / s->time, strdup(buff + 4));
+		return (set_action(p, player_take, 7.0 / s->time, strdup(buff + 4)));
 	else if (!strncmp(buff, "put", 3))
-		set_action(player, player_put, 7.0 / s->time, strdup(buff + 3));
+		return (set_action(p, player_put, 7.0 / s->time, strdup(buff + 3)));
 	else if (!strcmp(buff, "kick\n"))
-		set_action(player, player_kick, 7.0 / s->time, NULL);
+		return (set_action(p, player_kick, 7.0 / s->time, NULL));
 	else if (!strncmp(buff, "broadcast", 9))
-		set_action(player, player_broadcast, 7.0 / s->time, strdup(buff + 10));
+		return (set_action(p, player_speak, 7.0 / s->time, strdup(buff + 10)));
 	else if (!strcmp(buff, "incantation"))
-		player_incantation_start(s, fd);
+		return (player_incantation_start(s, fd));
 	else if (!strcmp(buff, "fork\n"))
-		player_fork(s, fd);
+		return (player_fork(s, fd));
 	else if (!strcmp(buff, "connect_nbr\n"))
-		player_connect_nbr(s, fd);
-	else
+		return (player_connect_nbr(s, fd));
 		send(fd, "Unknown command\n", 16, 0);
 }
 
-//TODO: shorten
-//FIXME: eggs don't EBO -> player not spawning from egg
 static void	handle_unknown(t_state *s, int fd, char *buff)
 {
 	size_t	i;
@@ -94,7 +90,8 @@ static void	handle_unknown(t_state *s, int fd, char *buff)
 	if (!s->teams[i].nb_client)
 		return ((void)send(fd, "Team is full\n", 13, 0));
 	egg = NULL;
-	if (s->teams[i].eggs &&	!((t_egg *)(s->teams[i].eggs)->content)->hatch_time.tv_sec)
+	if (s->teams[i].eggs &&
+		!((t_egg *)(s->teams[i].eggs)->content)->hatch_time.tv_sec)
 		(egg = s->teams[i].eggs) && (s->teams[i].eggs = egg->next);
 	s->clients[fd].type = PLAYER;
 	s->clients[fd].player = new_player(s, buff, egg ? egg->content : NULL);
@@ -145,7 +142,5 @@ void		client_read(t_state *s, int fd)
 		return ;
 	}
 	buff[r] = 0;
-	//TODO: handle newlines
-	// Perhaps stringsplit?
 	cbuff_write(s->clients[fd].buf_read, buff);
 }

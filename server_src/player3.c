@@ -6,7 +6,7 @@
 /*   By: dslogrov <dslogrove@gmail.com>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/03 15:28:02 by dslogrov          #+#    #+#             */
-/*   Updated: 2019/12/12 18:17:55 by dslogrov         ###   ########.fr       */
+/*   Updated: 2020/01/28 13:36:43 by dslogrov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void			player_fork(t_state *s, int fd)
 	monitor_pfk(s, s->clients[fd].player);
 }
 
-void			player_broadcast(t_state *s, int fd, void *message)
+void			player_speak(t_state *s, int fd, void *message)
 {
 	t_player	*player;
 	int			i;
